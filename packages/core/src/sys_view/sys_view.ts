@@ -4,8 +4,8 @@ import { ISysView } from './interface';
 export class SysView implements ISysView {
     private _renderer: ThreeRenderer;
 
-    constructor(private _container: HTMLElement, autoResize = true) {
-        this._renderer = new ThreeRenderer(this._container);
+    constructor(private _container: HTMLElement, autoResize = true, options = {}) {
+        this._renderer = new ThreeRenderer(this._container, options);
 
         if (autoResize) {
             const resizeObserver = new ResizeObserver(() => this.resize());

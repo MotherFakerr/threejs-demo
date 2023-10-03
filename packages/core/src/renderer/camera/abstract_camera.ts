@@ -1,4 +1,6 @@
-export abstract class AbstractCamera<T extends THREE.Camera = THREE.Camera> {
+import { ICamera } from './interface';
+
+export abstract class AbstractCamera<T extends THREE.Camera = THREE.Camera> implements ICamera<T> {
     protected _instance: T;
 
     public getInstance(): T {
