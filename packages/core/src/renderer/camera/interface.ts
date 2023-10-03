@@ -1,6 +1,10 @@
+import { Vector3 } from 'three';
+
 export interface ICamera<T extends THREE.Camera = THREE.Camera> {
     getInstance(): T;
+    position: Vector3;
     resize(width: number, height: number): void;
+    updateProjectionMatrix(): void;
 }
 
 export enum EN_CAMERA_TYPE {

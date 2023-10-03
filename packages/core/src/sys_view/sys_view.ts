@@ -1,8 +1,9 @@
-import { ThreeRenderer } from '../renderer';
+import { IRenderer } from '../renderer/interface';
+import { ThreeRenderer } from '../renderer/three_renderer';
 import { ISysView } from './interface';
 
 export class SysView implements ISysView {
-    private _renderer: ThreeRenderer;
+    private _renderer: IRenderer;
 
     constructor(private _container: HTMLElement, autoResize = true, options = {}) {
         this._renderer = new ThreeRenderer(this._container, options);
@@ -11,6 +12,15 @@ export class SysView implements ISysView {
             const resizeObserver = new ResizeObserver(() => this.resize());
             resizeObserver.observe(this._container);
         }
+    }
+
+    public getRenderer(): IRenderer {
+        return this._renderer;
+    }
+
+    public updateCamera(): void {
+        this._renderer.getCamera().updateProjectionMatrix();
+        this.updateView();
     }
 
     public updateView(): void {

@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, Renderer, Scene, WebGLRenderer } from 'three';
+import { BoxGeometry, Mesh, MeshBasicMaterial, Renderer, Scene, Vector3, WebGLRenderer } from 'three';
 import { IRenderer, IThreeRenderOptions } from './interface';
 import { PerspectiveCamera } from './camera/perspective_camera';
 import { EN_CAMERA_TYPE, ICamera, OrthographicCamera } from './camera';
@@ -59,5 +59,7 @@ export class ThreeRenderer implements IRenderer {
                 far,
             });
         }
+
+        this._camera.position = new Vector3(0, 0, 5);
     }
 }

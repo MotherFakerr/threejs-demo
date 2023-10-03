@@ -6,7 +6,6 @@ export class OrthographicCamera extends AbstractCamera<THREE.OrthographicCamera>
     constructor({ left, right, top, bottom, near, far }: IOrthographicCameraOptions) {
         super();
         this._instance = new THREE.OrthographicCamera(left, right, top, bottom, near, far);
-        this._instance.position.z = 5;
     }
 
     public get left(): number {
@@ -55,6 +54,10 @@ export class OrthographicCamera extends AbstractCamera<THREE.OrthographicCamera>
 
     public set far(v: number) {
         this._instance.far = v;
+    }
+
+    public updateProjectionMatrix(): void {
+        this._instance.updateProjectionMatrix();
     }
 
     public resize(width: number, height: number): void {

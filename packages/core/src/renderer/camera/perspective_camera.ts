@@ -6,7 +6,6 @@ export class PerspectiveCamera extends AbstractCamera<THREE.PerspectiveCamera> i
     constructor({ fov, aspect, near, far }: IPerspectiveCameraOptions) {
         super();
         this._instance = new THREE.PerspectiveCamera(fov, aspect, near, far);
-        this._instance.position.z = 5;
     }
 
     public get fov(): number {
@@ -39,6 +38,10 @@ export class PerspectiveCamera extends AbstractCamera<THREE.PerspectiveCamera> i
 
     public set far(v: number) {
         this._instance.far = v;
+    }
+
+    public updateProjectionMatrix(): void {
+        this._instance.updateProjectionMatrix();
     }
 
     public resize(width: number, height: number): void {
