@@ -1,13 +1,12 @@
 import { BoxGeometry, Mesh, MeshBasicMaterial, Renderer, Scene, WebGLRenderer } from 'three';
 import { IRenderer } from './interface';
 import { PerspectiveCamera } from './camera/perspective_camera';
-import { AbstractCamera } from './camera/abstract_camera';
-import { OrthographicCamera } from './camera/perspective_camera copy';
+import { AbstractCamera } from './camera';
 
 export class ThreeRenderer implements IRenderer {
     private _scene: Scene;
 
-    private _camera: OrthographicCamera;
+    private _camera: AbstractCamera;
 
     private _renderer: Renderer;
 
@@ -31,6 +30,7 @@ export class ThreeRenderer implements IRenderer {
 
     public resize(width: number, height: number): void {
         this._renderer.setSize(width, height);
-        this._camera.getInstance;
+        this._camera.resize(width, height);
+        this.render();
     }
 }

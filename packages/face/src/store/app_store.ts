@@ -10,7 +10,6 @@ export interface IAppStore {
     getMainView(): ISysView;
     createView(id: string, container: HTMLElement): ISysView;
     delViewById(id: string): void;
-    resizeView(id: string): void;
 }
 
 @registerStore('appStore')
@@ -32,7 +31,6 @@ export class AppStore extends AbstractStore implements IAppStore {
             getMainView: action.bound,
             createView: action.bound,
             delViewById: action.bound,
-            resizeView: action.bound,
         });
     }
 
@@ -57,13 +55,5 @@ export class AppStore extends AbstractStore implements IAppStore {
 
     public delViewById(id: string): void {
         this._mainApp.delViewById(id);
-    }
-
-    public resizeView(id: string): void {
-        const view = this._mainApp.getViewById(id);
-        if (!view) {
-            throw new Error('main view is not created');
-        }
-        view.resize();
     }
 }

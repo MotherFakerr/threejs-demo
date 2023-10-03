@@ -9,6 +9,11 @@ export class PerspectiveCamera extends AbstractCamera<THREE.PerspectiveCamera> {
     }
 
     public set aspect(v: number) {
-        this._instance.aspect = this.aspect;
+        this._instance.aspect = v;
+    }
+
+    public resize(width: number, height: number): void {
+        this._instance.aspect = width / height;
+        this._instance.updateProjectionMatrix();
     }
 }

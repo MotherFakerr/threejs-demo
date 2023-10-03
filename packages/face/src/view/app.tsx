@@ -28,7 +28,7 @@ export class App extends React.Component<Partial<IProps>> {
     }
 
     public render(): React.ReactElement {
-        const { mainViewId, noViewId, resizeView } = this.props.appStore!;
+        const { mainViewId, noViewId } = this.props.appStore!;
 
         return (
             <div className='App'>
@@ -40,11 +40,6 @@ export class App extends React.Component<Partial<IProps>> {
                             ref={(e) => {
                                 if (e) {
                                     this._appContainer = e;
-                                    // const onResize = () => resizeView(mainViewId);
-                                    // this._appContainer.removeEventListener('resize', onResize);
-                                    // this._appContainer.addEventListener('resize', () => onResize());
-                                    this._appContainer.onresize = () => console.log(2);
-                                    window.onresize = () => console.log(1);
                                 }
                             }}
                         />
