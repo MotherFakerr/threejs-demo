@@ -11,13 +11,15 @@
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "skipLibCheck": true,
+        "suppressImplicitAnyIndexErrors": true,
         "experimentalDecorators": true,
         "noUnusedLocals": true,
         "downlevelIteration": true,
         "strict": true,
         "strictPropertyInitialization": false,
         "allowSyntheticDefaultImports": true,
-        "skipDefaultLibCheck": true
+        "skipDefaultLibCheck": true,
+        "ignoreDeprecations": "5.0"
     },
     "exclude": [
         "node_modules",
