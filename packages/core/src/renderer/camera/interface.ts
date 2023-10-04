@@ -3,6 +3,7 @@ import { Vector3 } from 'three';
 export interface ICamera<T extends THREE.Camera = THREE.Camera> {
     getInstance(): T;
     position: Vector3;
+    lookAt(target: Vector3): void;
     resize(width: number, height: number): void;
     updateProjectionMatrix(): void;
 }

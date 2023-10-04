@@ -16,6 +16,10 @@ export abstract class AbstractCamera<T extends THREE.Camera = THREE.Camera> impl
         this.getInstance().position.set(x, y, z);
     }
 
+    public lookAt(target: Vector3): void {
+        this.getInstance().lookAt(target);
+    }
+
     public abstract updateProjectionMatrix(): void;
 
     public abstract resize(width: number, height: number): void;

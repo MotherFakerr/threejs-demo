@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, Renderer, Scene, Vector3, WebGLRenderer } from 'three';
+import { BoxGeometry, Color, Mesh, MeshBasicMaterial, Renderer, Scene, Vector3, WebGLRenderer } from 'three';
 import { IRenderer, IThreeRenderOptions } from './interface';
 import { PerspectiveCamera } from './camera/perspective_camera';
 import { EN_CAMERA_TYPE, ICamera, OrthographicCamera } from './camera';
@@ -22,6 +22,7 @@ export class ThreeRenderer implements IRenderer {
         const cube = new Mesh(geometry, material);
 
         this._scene.add(cube);
+        this._scene.background = new Color(255, 255, 255);
     }
 
     public render(): void {
