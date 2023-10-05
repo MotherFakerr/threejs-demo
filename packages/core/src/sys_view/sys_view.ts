@@ -1,11 +1,12 @@
 import { IRenderer } from '../renderer/interface';
 import { ThreeRenderer } from '../renderer/three_renderer';
-import { ISysView } from './interface';
+import { ISysView, ISysViewOptions } from './interface';
 
 export class SysView implements ISysView {
     private _renderer: IRenderer;
 
-    constructor(private _container: HTMLElement, autoResize = true, options = {}) {
+    constructor(private _container: HTMLElement, options?: ISysViewOptions) {
+        const { autoResize } = options;
         this._renderer = new ThreeRenderer(this._container, options);
 
         if (autoResize) {

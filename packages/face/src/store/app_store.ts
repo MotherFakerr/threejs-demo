@@ -1,4 +1,4 @@
-import { ISysApp, ISysView, SysApp } from '@threejs-demo/core';
+import { ISysApp, ISysView, ISysViewOptions, SysApp } from '@threejs-demo/core';
 import { action, makeObservable, observable } from 'mobx';
 import { registerStore } from '.';
 import { AbstractStore } from './abstract_store';
@@ -37,7 +37,7 @@ export class AppStore extends AbstractStore implements IAppStore {
     public initApp(container: HTMLElement): void {
         this._mainApp = SysApp;
         this._mainApp.initApp();
-        this._mainView = this.createView(this.mainViewId, container);
+        this._mainView = this.createView(this.mainViewId, container, { autoResize: true, isDebug: true });
         this._mainView.updateView();
     }
 
@@ -49,8 +49,8 @@ export class AppStore extends AbstractStore implements IAppStore {
         return this._mainView;
     }
 
-    public createView(id: string, container: HTMLElement): ISysView {
-        return this._mainApp.createView(id, container);
+    public createView(id: string, container: HTMLElement, options?: ISysViewOptions): ISysView {
+        return this._mainApp.createView(id, container, options);
     }
 
     public delViewById(id: string): void {

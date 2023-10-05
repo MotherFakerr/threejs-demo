@@ -1,4 +1,5 @@
-import { ISysView, SysView } from '../sys_view';
+import { EN_CAMERA_TYPE } from '../renderer';
+import { ISysView, ISysViewOptions, SysView } from '../sys_view';
 import { ISysApp } from './interface';
 
 export class SysAppImpl implements ISysApp {
@@ -16,8 +17,8 @@ export class SysAppImpl implements ISysApp {
         return undefined;
     }
 
-    public createView(id: string, container: HTMLElement): ISysView {
-        const view = new SysView(container);
+    public createView(id: string, container: HTMLElement, options: ISysViewOptions = { autoResize: true }): ISysView {
+        const view = new SysView(container, options);
         this._viewMap.set(id, view);
         return view;
     }
