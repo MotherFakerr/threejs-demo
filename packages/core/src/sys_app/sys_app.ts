@@ -1,4 +1,3 @@
-import { EN_CAMERA_TYPE } from '../renderer';
 import { ISysView, ISysViewOptions, SysView } from '../sys_view';
 import { ISysApp } from './interface';
 

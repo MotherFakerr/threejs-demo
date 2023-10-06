@@ -1,10 +1,10 @@
 import {
     AxesHelper,
     BoxGeometry,
-    Color,
     Mesh,
     MeshBasicMaterial,
     MeshLambertMaterial,
+    Object3D,
     PointLight,
     PointLightHelper,
     Renderer,
@@ -16,8 +16,17 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { IRenderer, IThreeRenderOptions } from './interface';
 import { PerspectiveCamera } from './camera/perspective_camera';
 import { EN_CAMERA_TYPE, ICamera, OrthographicCamera } from './camera';
+import { GeoElementMgr } from './geo_element_mgr';
+import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abstract_geo_element';
+import { GElementClass } from '../geo_element/interface';
+import { ElementIdPool } from '../id/id_pool';
+import { ElementId } from '../id/element_id';
 
 export class ThreeRenderer implements IRenderer {
+    private readonly _geoElementMgr: GeoElementMgr;
+
+    private readonly _idPool = new ElementIdPool();
+
     private _scene: Scene;
 
     private _camera: ICamera;
@@ -25,6 +34,7 @@ export class ThreeRenderer implements IRenderer {
     private _renderer: Renderer;
 
     constructor(container: HTMLElement, options: IThreeRenderOptions) {
+        this._geoElementMgr = new GeoElementMgr();
         this._scene = new Scene();
         this._initCamera(container, options);
         this._initRenderer(container);
@@ -42,15 +52,13 @@ export class ThreeRenderer implements IRenderer {
             transparent: true, // 开启透明
             opacity: 0.5,
         });
+
         const cube = new Mesh(geometry, material);
         cube.position.set(0, 0, 0);
         const cube1 = new Mesh(geometry, material1);
         cube1.position.set(120, 0, 0);
 
-        const pointLight = new PointLight(0xffffff, 1, 0, 0);
-        pointLight.position.set(80, 200, 0);
-
-        this._scene.add(cube, cube1, pointLight);
+        this._scene.add(cube, cube1);
         // this._scene.background = new Color(255, 255, 255);
 
         // tmp code end ------------------
@@ -58,8 +66,7 @@ export class ThreeRenderer implements IRenderer {
         const { isDebug } = options;
         if (isDebug) {
             const axesHelper = new AxesHelper(150);
-            const pointLightHelper = new PointLightHelper(pointLight, 10);
-            this._scene.add(axesHelper, pointLightHelper);
+            this._scene.add(axesHelper);
 
             const controls = new OrbitControls(this._camera.getInstance(), container);
             // 如果OrbitControls改变了相机参数，重新调用渲染器渲染三维场景
@@ -85,6 +92,43 @@ export class ThreeRenderer implements IRenderer {
 
     public getScene(): Scene {
         return this._scene;
+    }
+
+    public createGeoElement<T extends AbstractGeoElement>(
+        Ctor: GElementClass<T>,
+        params: Omit<Parameters<T['create']>[0], keyof IAbstractGeoElementInit>,
+    ): T {
+        const element = new Ctor(this as IRenderer, this._idPool).create({ ...params });
+        this._geoElementMgr.addElements(element);
+        this._scene.add(...element.renderObjects);
+        return element;
+    }
+
+    public getElementById(eleId: number | ElementId): AbstractGeoElement | undefined {
+        const id = eleId instanceof ElementId ? eleId.toNum() : eleId;
+        return this._geoElementMgr.getElementById(id);
+    }
+
+    public getElementsByIds(...eleIds: (number | ElementId)[]): AbstractGeoElement[] {
+        const ids = eleIds.map((id) => (id instanceof ElementId ? id.toNum() : id));
+        return this._geoElementMgr.getElementsByIds(...ids);
+    }
+
+    public delElementsByIds(...eleIds: (number | ElementId)[]): void {
+        const ids = eleIds.map((id) => (id instanceof ElementId ? id.toNum() : id));
+        const elements = this._geoElementMgr.getElementsByIds(...ids);
+        this._scene.remove(
+            ...elements.reduce((allEles, ele) => {
+                allEles.push(...ele.renderObjects);
+                return allEles;
+            }, [] as Object3D[]),
+        );
+        this._geoElementMgr.delElementsByIds(...ids);
+        this._idPool.recycleIds(...ids);
+    }
+
+    public getAllElements(): AbstractGeoElement[] {
+        return this._geoElementMgr.getAllElements();
     }
 
     private _initCamera(

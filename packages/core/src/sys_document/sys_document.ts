@@ -1,19 +1,60 @@
-import { IElement } from '../element';
-import { ElementId } from '../element/element_id';
-import { ElementIdPool } from '../element/id_pool';
+import { AbstractUniqueElement } from '../element';
+import { ElementClass, IAbstractElement, UniqueElementClass } from '../element/interface';
+import { ElementId } from '../id/element_id';
+import { ElementIdPool } from '../id/id_pool';
+import { ISysView } from '../sys_view';
+import { ElementMgr } from './element_mgr';
 import { ISysDocument } from './interface';
 
 export class SysDocument implements ISysDocument {
-    private _idPool: ElementIdPool;
+    private readonly _elementMgr: ElementMgr;
 
-    private _elements = new Map<number, IElement>();
+    private readonly _idPool: ElementIdPool;
 
-    constructor() {
+    private _view: ISysView;
+
+    constructor(view: ISysView) {
+        this._view = view;
         this._idPool = new ElementIdPool();
+        this._elementMgr = new ElementMgr();
     }
 
-    public getElementById(eleId: number | ElementId): IElement | undefined {
+    public getSysView(): ISysView {
+        return this._view;
+    }
+
+    public createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['create']>[0]): T {
+        const element = new Ctor(this as ISysDocument, this._idPool).create({ ...params });
+        this._elementMgr.addElements(element);
+        return element;
+    }
+
+    public getElementById(eleId: number | ElementId): IAbstractElement | undefined {
         const id = eleId instanceof ElementId ? eleId.toNum() : eleId;
-        return this._elements.get(id);
+        return this._elementMgr.getElementById(id);
+    }
+
+    public getElementsByIds(...eleIds: (number | ElementId)[]): IAbstractElement[] {
+        const ids = eleIds.map((id) => (id instanceof ElementId ? id.toNum() : id));
+        return this._elementMgr.getElementsByIds(...ids);
+    }
+
+    public delElementsByIds(...eleIds: (number | ElementId)[]): void {
+        const ids = eleIds.map((id) => (id instanceof ElementId ? id.toNum() : id));
+        this._elementMgr.delElementsByIds(...ids);
+        this._idPool.recycleIds(...ids);
+    }
+
+    public getAllElements(): IAbstractElement[] {
+        return this._elementMgr.getAllElements();
+    }
+
+    public getOrCreateUniqueElement<T extends AbstractUniqueElement>(Ctor: UniqueElementClass<T>): T {
+        let element = this._elementMgr.getUniqueElementByCtor<T>(Ctor);
+        if (!element) {
+            element = new Ctor(this as ISysDocument, this._idPool);
+            this._elementMgr.addUniqueElementByCtor(Ctor, element);
+        }
+        return element;
     }
 }

@@ -1,7 +1,9 @@
 import { ISysApp, ISysView, ISysViewOptions, SysApp } from '@threejs-demo/core';
 import { action, makeObservable, observable } from 'mobx';
-import { registerStore } from '.';
+import { registerStore, store } from '.';
 import { AbstractStore } from './abstract_store';
+import { AmbientLightElement } from '../../../elements/src';
+import { IDebuggerStore } from './debugger_store';
 
 export interface IAppStore {
     mainViewId: string;
@@ -37,7 +39,11 @@ export class AppStore extends AbstractStore implements IAppStore {
     public initApp(container: HTMLElement): void {
         this._mainApp = SysApp;
         this._mainApp.initApp();
-        this._mainView = this.createView(this.mainViewId, container, { autoResize: true, isDebug: true });
+        this._mainView = this.createView(this.mainViewId, container, {
+            autoResize: true,
+            isDebug: (store.debuggerStore as IDebuggerStore).isDebug,
+        });
+        this._mainView.getDocument().getOrCreateUniqueElement(AmbientLightElement).create({ color: 0xffffff, intensity: 10 });
         this._mainView.updateView();
     }
 
