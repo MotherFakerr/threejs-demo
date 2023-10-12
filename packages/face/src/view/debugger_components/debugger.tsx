@@ -6,6 +6,7 @@ import { PrespectiveCameraView } from './prespective_camera';
 import { IAppStore } from '../../store/app_store';
 import './debugger.less';
 import './debugger_util';
+import { FramesView } from './frames';
 
 interface IProps {
     view: ISysView;
@@ -32,9 +33,10 @@ export class Debugger extends React.Component<Partial<IProps>> {
         }
         return (
             <div className='debugger'>
+                <FramesView view={view} />
                 {view && isDebug && (
                     <>
-                        <div className='test-options'>
+                        <div className='debug-options-area'>
                             {debugMode === EN_DEBUG_MODE.PRESPECTIVE_CAMERA && <PrespectiveCameraView view={view} />}
                         </div>
                     </>

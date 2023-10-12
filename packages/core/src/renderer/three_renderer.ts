@@ -1,15 +1,13 @@
 import {
     AxesHelper,
     BoxGeometry,
+    Clock,
     Mesh,
     MeshBasicMaterial,
     MeshLambertMaterial,
     Object3D,
-    PointLight,
-    PointLightHelper,
     Renderer,
     Scene,
-    Vector3,
     WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -32,6 +30,11 @@ export class ThreeRenderer implements IRenderer {
     private _camera: ICamera;
 
     private _renderer: Renderer;
+
+    private _threeClock: Clock;
+
+    // 帧数
+    private _frames = 0;
 
     constructor(container: HTMLElement, options: IThreeRenderOptions) {
         this._geoElementMgr = new GeoElementMgr();
@@ -69,11 +72,12 @@ export class ThreeRenderer implements IRenderer {
             this._scene.add(axesHelper);
 
             const controls = new OrbitControls(this._camera.getInstance(), container);
-            // 如果OrbitControls改变了相机参数，重新调用渲染器渲染三维场景
-            controls.addEventListener('change', () => {
-                this._renderer.render(this._scene, this._camera.getInstance()); // 执行渲染操作
-            });
         }
+
+        setInterval(() => {
+            cube.rotateX(0.1);
+        }, 10);
+        this._requestAnimationFrame();
     }
 
     public render(): void {
@@ -92,6 +96,10 @@ export class ThreeRenderer implements IRenderer {
 
     public getScene(): Scene {
         return this._scene;
+    }
+
+    public getFrames(): number {
+        return this._frames;
     }
 
     public createGeoElement<T extends AbstractGeoElement>(
@@ -129,6 +137,17 @@ export class ThreeRenderer implements IRenderer {
 
     public getAllElements(): AbstractGeoElement[] {
         return this._geoElementMgr.getAllElements();
+    }
+
+    private _requestAnimationFrame(): void {
+        if (!this._threeClock) {
+            this._threeClock = new Clock();
+        }
+        const frames = this._threeClock.getDelta();
+        this._frames = Math.round(1 / frames);
+
+        this.render();
+        requestAnimationFrame(this._requestAnimationFrame.bind(this));
     }
 
     private _initCamera(

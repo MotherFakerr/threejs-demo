@@ -1,7 +1,7 @@
 import { Object3D } from 'three';
 import { ElementId } from '../id/element_id';
-import { ElementIdPool } from '../id';
 import { IRenderer } from '../renderer';
+import { ElementIdPool } from '../id/id_pool';
 
 export interface IAbstractGeoElementInit {
     isDebug?: boolean;

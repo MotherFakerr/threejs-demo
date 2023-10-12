@@ -1,4 +1,4 @@
-import { ElementIdPool } from '../id';
+import { ElementIdPool } from '../id/id_pool';
 import { IRenderer } from '../renderer/interface';
 import { AbstractGeoElement } from './abstract_geo_element';
 

@@ -9,6 +9,7 @@ export interface IRenderer {
     resize(width: number, height: number): void;
     getCamera(): ICamera;
     getScene(): Scene;
+    getFrames(): number;
     createGeoElement<T extends AbstractGeoElement>(
         Ctor: GElementClass<T>,
         params: Omit<Parameters<T['create']>[0], keyof IAbstractGeoElementInit>,
