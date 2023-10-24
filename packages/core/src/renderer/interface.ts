@@ -9,7 +9,6 @@ export interface IRenderer {
     resize(width: number, height: number): void;
     getCamera(): ICamera;
     getScene(): Scene;
-    getFrames(): number;
     createGeoElement<T extends AbstractGeoElement>(
         Ctor: GElementClass<T>,
         params: Omit<Parameters<T['create']>[0], keyof IAbstractGeoElementInit>,
@@ -22,6 +21,8 @@ export interface IRenderer {
 
 export interface IThreeRenderOptions {
     isDebug?: boolean;
+    showFrameStats?: boolean;
+    isAnimate?: boolean;
     /** camera options------------------------ */
     cameraType?: EN_CAMERA_TYPE;
     perspectiveCameraOptions?: IPerspectiveCameraOptions;

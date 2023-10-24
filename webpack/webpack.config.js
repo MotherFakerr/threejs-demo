@@ -59,10 +59,21 @@ module.exports = {
                 use: {
                     loader: 'url-loader',
                     options: {
-                        name: 'images/[hash].[ext]',
+                        name: '[hash].[ext]',
                         limit: 1024,
                     },
                 },
+            },
+            {
+                test: /\.(pmx|vmd|gltf|fbx)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]', // 指定输出的路径和文件名格式
+                        },
+                    },
+                ],
             },
         ],
     },

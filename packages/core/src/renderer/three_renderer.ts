@@ -1,7 +1,9 @@
 import {
+    AnimationMixer,
     AxesHelper,
     BoxGeometry,
     Clock,
+    Color,
     Mesh,
     MeshBasicMaterial,
     MeshLambertMaterial,
@@ -11,6 +13,10 @@ import {
     WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import Stats from 'three/examples/jsm/libs/stats.module';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { MMDAnimationHelper } from 'three/examples/jsm/animation/MMDAnimationHelper.js';
 import { IRenderer, IThreeRenderOptions } from './interface';
 import { PerspectiveCamera } from './camera/perspective_camera';
 import { EN_CAMERA_TYPE, ICamera, OrthographicCamera } from './camera';
@@ -19,6 +25,9 @@ import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abst
 import { GElementClass } from '../geo_element/interface';
 import { ElementIdPool } from '../id/id_pool';
 import { ElementId } from '../id/element_id';
+import './keli2.gltf';
+import './test.gltf';
+import './大社.fbx';
 
 export class ThreeRenderer implements IRenderer {
     private readonly _geoElementMgr: GeoElementMgr;
@@ -31,27 +40,28 @@ export class ThreeRenderer implements IRenderer {
 
     private _renderer: Renderer;
 
-    private _threeClock: Clock;
+    private _stats: Stats | undefined;
 
-    // 帧数
-    private _frames = 0;
+    private _animationMixer: AnimationMixer;
 
-    constructor(container: HTMLElement, options: IThreeRenderOptions) {
+    private _clock: Clock;
+
+    constructor(private _container: HTMLElement, private _options: IThreeRenderOptions) {
         this._geoElementMgr = new GeoElementMgr();
         this._scene = new Scene();
-        this._initCamera(container, options);
-        this._initRenderer(container);
+        this._initCamera(_container, _options);
+        this._initRenderer(_container);
 
         // temp code -------------
         const geometry = new BoxGeometry(50, 100, 20);
         const material = new MeshBasicMaterial({
-            color: 0xff2288,
+            color: 0x00ffff,
             transparent: true, // 开启透明
             opacity: 0.5,
         });
 
         const material1 = new MeshLambertMaterial({
-            color: 0xff2288,
+            color: 0x00ffff,
             transparent: true, // 开启透明
             opacity: 0.5,
         });
@@ -61,23 +71,63 @@ export class ThreeRenderer implements IRenderer {
         const cube1 = new Mesh(geometry, material1);
         cube1.position.set(120, 0, 0);
 
-        this._scene.add(cube, cube1);
-        // this._scene.background = new Color(255, 255, 255);
+        // this._scene.add(cube, cube1);
+        this._scene.background = null;
 
         // tmp code end ------------------
 
-        const { isDebug } = options;
+        const { isDebug, showFrameStats, isAnimate } = _options;
         if (isDebug) {
             const axesHelper = new AxesHelper(150);
             this._scene.add(axesHelper);
 
-            const controls = new OrbitControls(this._camera.getInstance(), container);
+            const controls = new OrbitControls(this._camera.getInstance(), _container);
+        }
+        // const num = 100; // 控制长方体模型数量
+        // const meshes: Mesh[] = [];
+        // for (let i = 0; i < num; i++) {
+        //     const geometry = new BoxGeometry(5, 5, 5);
+        //     const material = new MeshLambertMaterial({
+        //         color: 0x00ffff,
+        //     });
+        //     const mesh = new Mesh(geometry, material);
+        //     // 随机生成长方体xyz坐标
+        //     const x = (Math.random() - 0.5) * 2000;
+        //     const y = (Math.random() - 0.5) * 2000;
+        //     const z = (Math.random() - 0.5) * 2000;
+        //     mesh.position.set(x, y, z);
+        //     meshes.push(mesh);
+        //     this._scene.add(mesh); // 模型对象插入场景中
+        // }
+        const helper = new MMDAnimationHelper();
+        const loader = new GLTFLoader();
+        loader.load('keli2.gltf', (mmd) => {
+            // called when the resource is loaded
+            debugger;
+            this._animationMixer = new AnimationMixer(mmd.scene);
+            const clip = this._animationMixer.clipAction(mmd.animations[0]);
+            this._scene.add(mmd.scene);
+            clip.play();
+        });
+        const loader1 = new FBXLoader();
+        loader1.load('大社.fbx', (mmd) => {
+            // called when the resource is loaded
+            debugger;
+            // this._scene.add(mmd);
+        });
+        this._clock = new Clock();
+
+        if (isAnimate) {
+            setInterval(() => {
+                // this._test.rotateY(0.1);
+            }, 10);
+            this._requestAnimationFrame();
         }
 
-        setInterval(() => {
-            cube.rotateX(0.1);
-        }, 10);
-        this._requestAnimationFrame();
+        if (showFrameStats) {
+            this._stats = new Stats();
+            _container.appendChild(this._stats.dom);
+        }
     }
 
     public render(): void {
@@ -96,10 +146,6 @@ export class ThreeRenderer implements IRenderer {
 
     public getScene(): Scene {
         return this._scene;
-    }
-
-    public getFrames(): number {
-        return this._frames;
     }
 
     public createGeoElement<T extends AbstractGeoElement>(
@@ -146,12 +192,13 @@ export class ThreeRenderer implements IRenderer {
     }
 
     private _requestAnimationFrame(): void {
-        if (!this._threeClock) {
-            this._threeClock = new Clock();
+        if (this._stats) {
+            this._stats.update();
         }
-        const frames = this._threeClock.getDelta();
-        this._frames = Math.round(1 / frames);
 
+        if (this._animationMixer) {
+            this._animationMixer.update(this._clock.getDelta());
+        }
         this.render();
         requestAnimationFrame(this._requestAnimationFrame.bind(this));
     }
@@ -181,12 +228,12 @@ export class ThreeRenderer implements IRenderer {
             this._camera = new OrthographicCamera(options);
         }
 
-        this._camera.position.set(0, 0, 200);
+        this._camera.position.set(1, 1, 2);
         this._camera.lookAt(0, 0, 0);
     }
 
     private _initRenderer(container: HTMLElement): void {
-        this._renderer = new WebGLRenderer();
+        this._renderer = new WebGLRenderer({ alpha: true });
         this._renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(this._renderer.domElement);
     }
