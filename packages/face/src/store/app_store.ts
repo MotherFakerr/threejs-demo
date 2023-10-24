@@ -47,6 +47,7 @@ export class AppStore extends AbstractStore implements IAppStore {
         this._mainView = this.createView(this.mainViewId, container, {
             autoResize: true,
             isDebug: this.isDebug,
+            showFrameStats: this.isDebug,
             isAnimate: true,
         });
         this._mainView.getDocument().getOrCreateUniqueElement(AmbientLightElement).create({ color: 0xffffff, intensity: 1 });

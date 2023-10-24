@@ -24,25 +24,28 @@ export abstract class AbstractGraphicElement<T extends AbstractGeoElement[] = Ab
         return this._geoElements;
     }
 
-    public set geoElements(eles: T) {
+    public setGeoElements(eles: T): void {
         const oldEles = this._geoElements;
         const newEles = eles;
 
         // id相同的为复用element
         const newIDs = newEles.map((ele) => ele.id.toNum());
         const delIDs: number[] = [];
-        oldEles.forEach((ele) => {
-            const id = ele.id.toNum();
-            if (!newIDs.includes(id)) {
-                delIDs.push(id);
-            }
-        });
 
-        // 删除不复用element
-        this.getCurDoc()
-            .getSysView()
-            .getRenderer()
-            .delElementsByIds(...delIDs);
+        if (oldEles) {
+            oldEles.forEach((ele) => {
+                const id = ele.id.toNum();
+                if (!newIDs.includes(id)) {
+                    delIDs.push(id);
+                }
+            });
+
+            // 删除不复用element
+            this.getCurDoc()
+                .getSysView()
+                .getRenderer()
+                .delElementsByIds(...delIDs);
+        }
 
         this._geoElements = eles;
     }

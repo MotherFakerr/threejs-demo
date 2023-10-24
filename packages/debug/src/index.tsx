@@ -2,6 +2,9 @@ import { observer, inject } from 'mobx-react';
 import React from 'react';
 import { ISysView } from '@threejs-demo/core';
 import { IDebuggerStore } from './store/debugger_store';
+import './store/import';
+
+export * from './store';
 
 interface IProps {
     view: ISysView;

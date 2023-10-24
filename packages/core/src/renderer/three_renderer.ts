@@ -3,7 +3,6 @@ import {
     AxesHelper,
     BoxGeometry,
     Clock,
-    Color,
     Mesh,
     MeshBasicMaterial,
     MeshLambertMaterial,
@@ -15,8 +14,6 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import { MMDAnimationHelper } from 'three/examples/jsm/animation/MMDAnimationHelper.js';
 import { IRenderer, IThreeRenderOptions } from './interface';
 import { PerspectiveCamera } from './camera/perspective_camera';
 import { EN_CAMERA_TYPE, ICamera, OrthographicCamera } from './camera';
@@ -25,9 +22,6 @@ import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abst
 import { GElementClass } from '../geo_element/interface';
 import { ElementIdPool } from '../id/id_pool';
 import { ElementId } from '../id/element_id';
-import './keli2.gltf';
-import './test.gltf';
-import './大社.fbx';
 
 export class ThreeRenderer implements IRenderer {
     private readonly _geoElementMgr: GeoElementMgr;
@@ -99,22 +93,20 @@ export class ThreeRenderer implements IRenderer {
         //     meshes.push(mesh);
         //     this._scene.add(mesh); // 模型对象插入场景中
         // }
-        const helper = new MMDAnimationHelper();
         const loader = new GLTFLoader();
-        loader.load('keli2.gltf', (mmd) => {
+        loader.load('model/keli.gltf', (mmd) => {
             // called when the resource is loaded
-            debugger;
             this._animationMixer = new AnimationMixer(mmd.scene);
             const clip = this._animationMixer.clipAction(mmd.animations[0]);
             this._scene.add(mmd.scene);
             clip.play();
         });
-        const loader1 = new FBXLoader();
-        loader1.load('大社.fbx', (mmd) => {
-            // called when the resource is loaded
-            debugger;
-            // this._scene.add(mmd);
-        });
+        // const loader1 = new FBXLoader();
+        // loader1.load('大社.fbx', (mmd) => {
+        //     // called when the resource is loaded
+        //     debugger;
+        //     // this._scene.add(mmd);
+        // });
         this._clock = new Clock();
 
         if (isAnimate) {
@@ -233,7 +225,7 @@ export class ThreeRenderer implements IRenderer {
     }
 
     private _initRenderer(container: HTMLElement): void {
-        this._renderer = new WebGLRenderer({ alpha: true });
+        this._renderer = new WebGLRenderer({ alpha: true, antialias: true });
         this._renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(this._renderer.domElement);
     }

@@ -10,21 +10,23 @@ export class AmbientLightElement extends AbstractUniqueGraphicElement {
 
     public intensity = 0;
 
-    public create({ color, intensity }: IAmbientLightParams): this {
+    public async create(params: IAmbientLightParams): Promise<this> {
+        const { color, intensity } = params;
         this.color = color ?? 0xfffff;
         this.intensity = intensity ?? 0;
 
-        const geo = this.getCurDoc().getSysView().getRenderer().createGeoElement(GAmbientLight, { color, intensity });
-        this._geoElements = [geo];
+        await this.executeCalculators(params);
         return this;
     }
 
-    public update(params: IAmbientLightParams, disableUpdate = true): this {
+    public async update(params: IAmbientLightParams, disableUpdate = true): Promise<this> {
         const { color, intensity } = params;
         if (color) this.color = color;
         if (intensity) this.intensity = intensity;
 
-        this._calculatorObservers(params);
+        if (disableUpdate) {
+            await this.executeCalculators(params);
+        }
 
         return this;
     }

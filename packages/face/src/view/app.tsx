@@ -51,7 +51,7 @@ export class App extends React.Component<Partial<IProps>, IState> {
                             }}
                         />
                         <div id={noViewId}>{}</div>
-                        <Debugger view={mainView} />
+                        {mainView && <Debugger view={mainView} />}
                     </Content>
                 </Layout>
             </div>

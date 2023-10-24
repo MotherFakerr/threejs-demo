@@ -25,8 +25,8 @@ export class SysDocument implements ISysDocument {
         return this._view;
     }
 
-    public createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['create']>[0]): T {
-        const element = new Ctor(this as ISysDocument, this._idPool).create({ ...params });
+    public async createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['create']>[0]): Promise<T> {
+        const element = await new Ctor(this as ISysDocument, this._idPool).create({ ...params });
         this._elementMgr.addElements(element);
         return element;
     }

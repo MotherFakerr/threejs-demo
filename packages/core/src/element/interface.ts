@@ -1,3 +1,4 @@
+import { AbstractGeoElement } from '../geo_element';
 import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
 import { ISysDocument } from '../sys_document/interface';
@@ -6,13 +7,14 @@ import { AbstractUniqueGraphicElement } from './abstract_unique_graphic_element'
 
 export interface IAbstractElement {
     id: ElementId;
-    create(args: ANY): this;
+    create(args: ANY): Promise<this>;
     update(args: ANY, disableUpdate?: boolean): Promise<this>;
     getCurDoc(): ISysDocument;
 }
 
 export interface IAbstractGraphicElement extends IAbstractElement {
     executeCalculators(params: KV): Promise<void>;
+    setGeoElements(eles: AbstractGeoElement[]): void;
 }
 
 export type ElementClass<T extends IAbstractElement = IAbstractElement> = {

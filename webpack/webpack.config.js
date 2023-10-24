@@ -70,7 +70,7 @@ module.exports = {
                     {
                         loader: 'file-loader',
                         options: {
-                            name: '[name].[ext]', // 指定输出的路径和文件名格式
+                            name: 'model/[name].[ext]', // 指定输出的路径和文件名格式
                         },
                     },
                 ],

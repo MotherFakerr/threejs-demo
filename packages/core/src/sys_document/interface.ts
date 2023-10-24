@@ -5,7 +5,7 @@ import { ISysView } from '../sys_view';
 
 export interface ISysDocument {
     getSysView(): ISysView;
-    createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['create']>[0]): T;
+    createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['create']>[0]): Promise<T>;
     getElementById(eleId: number | ElementId): IAbstractElement | undefined;
     getElementsByIds(...eleIds: (number | ElementId)[]): IAbstractElement[];
     delElementsByIds(...eleIds: (number | ElementId)[]): void;
