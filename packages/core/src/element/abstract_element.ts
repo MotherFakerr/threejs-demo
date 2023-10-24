@@ -22,4 +22,6 @@ export abstract class AbstractElement implements IAbstractElement {
     }
 
     public abstract create(args: ANY): this;
+
+    public abstract update(args: ANY, disableUpdate?: boolean): Promise<this>;
 }

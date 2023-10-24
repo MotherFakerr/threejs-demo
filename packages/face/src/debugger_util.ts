@@ -1,5 +1,5 @@
-import { store } from '../../store';
-import { IAppStore } from '../../store/app_store';
+import { store } from './store';
+import { IAppStore } from './store/app_store';
 
 export function setupDebuggerUtil(): void {
     Reflect.defineProperty(window, 'mainView', {

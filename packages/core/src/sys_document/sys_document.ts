@@ -1,5 +1,7 @@
-import { AbstractUniqueElement } from '../element';
-import { ElementClass, IAbstractElement, UniqueElementClass } from '../element/interface';
+import { AbstractUniqueElement, AbstractUniqueGraphicElement } from '../element';
+import { ElementClass, IAbstractElement, UniqueElementClass, UniqueGraphicElementClass } from '../element/interface';
+import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abstract_geo_element';
+import { GElementClass } from '../geo_element/interface';
 import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
 import { ISysView } from '../sys_view';
@@ -56,5 +58,22 @@ export class SysDocument implements ISysDocument {
             this._elementMgr.addUniqueElementByCtor(Ctor, element);
         }
         return element;
+    }
+
+    public getOrCreateUniqueGraphicElement<T extends AbstractUniqueGraphicElement>(Ctor: UniqueGraphicElementClass<T>): T {
+        let element = this._elementMgr.getUniqueElementByCtor<T>(Ctor);
+        if (!element) {
+            element = new Ctor(this as ISysDocument, this._idPool);
+            this._elementMgr.addUniqueElementByCtor(Ctor, element);
+        }
+        return element;
+    }
+
+    public createGeoElement<T extends AbstractGeoElement>(
+        Ctor: GElementClass<T>,
+        params: Omit<Parameters<T['create']>[0], keyof IAbstractGeoElementInit>,
+    ): T {
+        const renderer = this.getSysView().getRenderer();
+        return renderer.createGeoElement<T>(Ctor, params);
     }
 }

@@ -1,17 +1,4 @@
-import {
-    AxesHelper,
-    BoxGeometry,
-    Mesh,
-    MeshBasicMaterial,
-    MeshLambertMaterial,
-    Object3D,
-    PointLight,
-    PointLightHelper,
-    Renderer,
-    Scene,
-    Vector3,
-    WebGLRenderer,
-} from 'three';
+import { AxesHelper, BoxGeometry, Mesh, MeshBasicMaterial, MeshLambertMaterial, Object3D, Renderer, Scene, WebGLRenderer } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { IRenderer, IThreeRenderOptions } from './interface';
 import { PerspectiveCamera } from './camera/perspective_camera';
@@ -100,7 +87,7 @@ export class ThreeRenderer implements IRenderer {
     ): T {
         const element = new Ctor(this as IRenderer, this._idPool).create({ ...params });
         this._geoElementMgr.addElements(element);
-        this._scene.add(...element.renderObjects);
+        this._scene.add(element.renderObject);
         return element;
     }
 
@@ -119,7 +106,7 @@ export class ThreeRenderer implements IRenderer {
         const elements = this._geoElementMgr.getElementsByIds(...ids);
         this._scene.remove(
             ...elements.reduce((allEles, ele) => {
-                allEles.push(...ele.renderObjects);
+                allEles.push(ele.renderObject);
                 return allEles;
             }, [] as Object3D[]),
         );
@@ -129,6 +116,12 @@ export class ThreeRenderer implements IRenderer {
 
     public getAllElements(): AbstractGeoElement[] {
         return this._geoElementMgr.getAllElements();
+    }
+
+    public async onGeoElementUpdate(element: AbstractGeoElement): Promise<void> {
+        const obj = element.renderObject.clone();
+        this._scene.remove(element.renderObject);
+        this._scene.add(obj);
     }
 
     private _initCamera(

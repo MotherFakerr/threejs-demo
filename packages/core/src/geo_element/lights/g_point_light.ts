@@ -10,19 +10,17 @@ export interface IGPointLightInit extends IAbstractGeoElementInit {
 }
 
 export class GPointLight extends AbstractGeoElement {
-    protected _renderObjects: PointLight[];
-
-    protected _debugObjects: PointLightHelper[];
+    protected _renderObject: PointLight;
 
     public create(params: IGPointLightInit): this {
         const { position, color, intensity, distance, decay, isDebug } = params;
         const pointLight = new PointLight(color, intensity, distance, decay);
         pointLight.position.set(position.x, position.y, position.z);
-        this._renderObjects = [pointLight];
+        this._renderObject = pointLight;
 
         if (isDebug) {
             const pointLightHelper = new PointLightHelper(pointLight, 3);
-            this._debugObjects = [pointLightHelper];
+            this._renderObject.add(pointLightHelper);
         }
         return this;
     }
