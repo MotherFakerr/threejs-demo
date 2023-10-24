@@ -3,8 +3,8 @@ import { inject, observer } from 'mobx-react';
 import './app.less';
 import { Layout } from 'antd';
 import { ISysView } from '@threejs-demo/core';
+import { Debugger } from '@threejs-demo/debug';
 import { IAppStore } from '../store/app_store';
-import { Debugger } from './debugger_components/debugger';
 
 const { Header, Content } = Layout;
 

@@ -7,12 +7,12 @@ export interface IGAmbientLightInit extends IAbstractGeoElementInit {
 }
 
 export class GAmbientLight extends AbstractGeoElement {
-    protected _renderObjects: AmbientLight[];
+    protected _renderObject: AmbientLight;
 
     public create(params: IGAmbientLightInit): this {
         const { color, intensity, isDebug } = params;
         const ambientLight = new AmbientLight(color, intensity);
-        this._renderObjects = [ambientLight];
+        this._renderObject = ambientLight;
 
         if (isDebug) {
             //

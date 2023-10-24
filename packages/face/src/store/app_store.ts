@@ -3,22 +3,25 @@ import { action, makeObservable, observable } from 'mobx';
 import { registerStore, store } from '.';
 import { AbstractStore } from './abstract_store';
 import { AmbientLightElement } from '../../../elements/src';
-import { IDebuggerStore } from './debugger_store';
 
 export interface IAppStore {
+    isDebug: boolean;
     mainViewId: string;
     noViewId: string;
     initApp(container: HTMLElement): void;
     getMainView(): ISysView;
     createView(id: string, container: HTMLElement): ISysView;
     delViewById(id: string): void;
+    setIsDebug(v: boolean): void;
 }
 
 @registerStore('appStore')
 export class AppStore extends AbstractStore implements IAppStore {
-    public mainViewId = 'view3d';
+    isDebug = false;
 
-    public noViewId = 'noView3d';
+    mainViewId = 'view3d';
+
+    noViewId = 'noView3d';
 
     private _mainView: ISysView;
 
@@ -27,27 +30,29 @@ export class AppStore extends AbstractStore implements IAppStore {
     constructor() {
         super();
         makeObservable(this, {
+            isDebug: observable,
             mainViewId: observable,
             noViewId: observable,
             initApp: action.bound,
             getMainView: action.bound,
             createView: action.bound,
             delViewById: action.bound,
+            setIsDebug: action.bound,
         });
     }
 
-    public initApp(container: HTMLElement): void {
+    initApp(container: HTMLElement): void {
         this._mainApp = SysApp;
         this._mainApp.initApp();
         this._mainView = this.createView(this.mainViewId, container, {
             autoResize: true,
-            isDebug: (store.debuggerStore as IDebuggerStore).isDebug,
+            isDebug: this.isDebug,
         });
         this._mainView.getDocument().getOrCreateUniqueElement(AmbientLightElement).create({ color: 0xffffff, intensity: 10 });
         this._mainView.updateView();
     }
 
-    public getMainView(): ISysView {
+    getMainView(): ISysView {
         if (!this._mainView) {
             throw new Error('main view is not created');
         }
@@ -55,11 +60,15 @@ export class AppStore extends AbstractStore implements IAppStore {
         return this._mainView;
     }
 
-    public createView(id: string, container: HTMLElement, options?: ISysViewOptions): ISysView {
+    createView(id: string, container: HTMLElement, options?: ISysViewOptions): ISysView {
         return this._mainApp.createView(id, container, options);
     }
 
-    public delViewById(id: string): void {
+    delViewById(id: string): void {
         this._mainApp.delViewById(id);
+    }
+
+    setIsDebug(v: boolean): void {
+        this.isDebug = v;
     }
 }
