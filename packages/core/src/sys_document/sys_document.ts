@@ -4,6 +4,7 @@ import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abst
 import { GElementClass } from '../geo_element/interface';
 import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
+import { IRenderer } from '../renderer';
 import { ISysView } from '../sys_view';
 import { ElementMgr } from './element_mgr';
 import { ISysDocument } from './interface';
@@ -21,8 +22,16 @@ export class SysDocument implements ISysDocument {
         this._elementMgr = new ElementMgr();
     }
 
+    /**
+     * @deprecated
+     * @returns
+     */
     public getSysView(): ISysView {
         return this._view;
+    }
+
+    public getRenderer(): IRenderer {
+        return this._view.getRenderer();
     }
 
     public async createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['create']>[0]): Promise<T> {
@@ -73,7 +82,7 @@ export class SysDocument implements ISysDocument {
         Ctor: GElementClass<T>,
         params: Omit<Parameters<T['create']>[0], keyof IAbstractGeoElementInit>,
     ): T {
-        const renderer = this.getSysView().getRenderer();
+        const renderer = this.getRenderer();
         return renderer.createGeoElement<T>(Ctor, params);
     }
 }

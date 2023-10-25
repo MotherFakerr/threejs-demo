@@ -1,5 +1,5 @@
 {
-    "name": "@threejs-demo/debug",
+    "name": "@threejs-demo/ui-debug",
     "version": "1.0.0",
     "description": "",
     "main": "src/index.tsx",

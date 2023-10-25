@@ -1,4 +1,4 @@
-import { AbstractUniqueGraphicElement, GAmbientLight } from '@threejs-demo/core';
+import { AbstractUniqueGraphicElement } from '@threejs-demo/core';
 
 export interface IAmbientLightParams {
     color?: number;

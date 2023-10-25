@@ -42,7 +42,6 @@ export abstract class AbstractGraphicElement<T extends AbstractGeoElement[] = Ab
 
             // 删除不复用element
             this.getCurDoc()
-                .getSysView()
                 .getRenderer()
                 .delElementsByIds(...delIDs);
         }
