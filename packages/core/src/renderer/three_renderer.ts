@@ -10,7 +10,7 @@ import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abst
 import { GElementClass } from '../geo_element/interface';
 import { ElementIdPool } from '../id/id_pool';
 import { ElementId } from '../id/element_id';
-
+import QB from '@threejs-demo/assets/images/qb.png'
 export class ThreeRenderer implements IRenderer {
     private readonly _geoElementMgr: GeoElementMgr;
 
@@ -181,14 +181,6 @@ export class ThreeRenderer implements IRenderer {
             opacity: 0.5,
         });
 
-        const floorMaterial = new THREE.MeshLambertMaterial({
-            color: 0x0000ff,
-            // transparent: true, // 开启透明
-            // opacity: 1,
-            side: THREE.DoubleSide,
-            wireframe: true,
-        });
-
         const cube = new THREE.Mesh(box, material);
         cube.position.set(0, 0, 0);
         const cube1 = new THREE.Mesh(box, material);
@@ -208,17 +200,33 @@ export class ThreeRenderer implements IRenderer {
         geometry.index = indexAttributes;
 
         const planeGeometry = new THREE.PlaneGeometry(100, 100, 10, 10);
+        const texLoader = new THREE.TextureLoader();
+        // .load()方法加载图像，返回一个纹理对象Texture
+        const texture = texLoader.load(QB);
 
-        const mesh = new THREE.Mesh(planeGeometry, floorMaterial);
-        mesh.rotateX(-Math.PI / 2);
-        this._scene.add(mesh);
+        const floorMaterial = new THREE.MeshLambertMaterial({
+            // color: 0x0000ff,
+            // // transparent: true, // 开启透明
+            // // opacity: 1,
+            // side: THREE.DoubleSide,
+            // wireframe: true,
+            map: texture,
+        });
+
+        const floor = new THREE.Mesh(planeGeometry, floorMaterial);
+        floor.rotateX(-Math.PI / 2);
+        this._scene.add(floor);
 
         const loader = new GLTFLoader();
         loader.load('model/keli.gltf', (mmd) => {
             // called when the resource is loaded
-            this._animationMixer = new THREE.AnimationMixer(mmd.scene);
+            const model = mmd.scene;
+            this._animationMixer = new THREE.AnimationMixer(model);
             const clip = this._animationMixer.clipAction(mmd.animations[0]);
-            this._scene.add(mmd.scene);
+            const meshAxesHelper = new THREE.AxesHelper(500);
+            model.add(meshAxesHelper);
+            this._scene.add(model);
+
             clip.play();
         });
 
