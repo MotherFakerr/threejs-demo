@@ -1,4 +1,3 @@
-import { Vector3 } from 'three';
 import { ICamera } from './interface';
 
 export abstract class AbstractCamera<T extends THREE.Camera = THREE.Camera> implements ICamera<T> {
@@ -8,11 +7,11 @@ export abstract class AbstractCamera<T extends THREE.Camera = THREE.Camera> impl
         return this._instance;
     }
 
-    public get position(): Vector3 {
+    public get position(): THREE.Vector3 {
         return this.getInstance().position;
     }
 
-    public set position({ x, y, z }: Vector3) {
+    public set position({ x, y, z }: THREE.Vector3) {
         this.getInstance().position.set(x, y, z);
     }
 

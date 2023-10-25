@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import THREE from 'three';
 import { AbstractCamera } from './abstract_camera';
 import { IPerspectiveCamera, IPerspectiveCameraOptions } from './interface';
 

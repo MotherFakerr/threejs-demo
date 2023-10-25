@@ -1,16 +1,4 @@
-import {
-    AnimationMixer,
-    AxesHelper,
-    BoxGeometry,
-    Clock,
-    Mesh,
-    MeshBasicMaterial,
-    MeshLambertMaterial,
-    Object3D,
-    Renderer,
-    Scene,
-    WebGLRenderer,
-} from 'three';
+import THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -28,22 +16,22 @@ export class ThreeRenderer implements IRenderer {
 
     private readonly _idPool = new ElementIdPool();
 
-    private _scene: Scene;
+    private _scene: THREE.Scene;
 
     private _camera: ICamera;
 
-    private _renderer: Renderer;
+    private _renderer: THREE.Renderer;
 
     private _stats: Stats | undefined;
 
-    private _animationMixer: AnimationMixer;
+    private _animationMixer: THREE.AnimationMixer;
 
-    private _clock: Clock;
+    private _clock: THREE.Clock;
 
     constructor(private _container: HTMLElement, private _options: IThreeRenderOptions) {
         this._geoElementMgr = new GeoElementMgr();
-        this._scene = new Scene();
-        this._clock = new Clock();
+        this._scene = new THREE.Scene();
+        this._clock = new THREE.Clock();
         this._initCamera();
         this._initRenderer();
         this._initFrameStats();
@@ -66,7 +54,7 @@ export class ThreeRenderer implements IRenderer {
         return this._camera;
     }
 
-    public getScene(): Scene {
+    public getScene(): THREE.Scene {
         return this._scene;
     }
 
@@ -97,7 +85,7 @@ export class ThreeRenderer implements IRenderer {
             ...elements.reduce((allEles, ele) => {
                 allEles.push(ele.renderObject);
                 return allEles;
-            }, [] as Object3D[]),
+            }, [] as THREE.Object3D[]),
         );
         this._geoElementMgr.delElementsByIds(...ids);
         this._idPool.recycleIds(...ids);
@@ -153,7 +141,7 @@ export class ThreeRenderer implements IRenderer {
     }
 
     private _initRenderer(): void {
-        this._renderer = new WebGLRenderer({ alpha: true, antialias: true });
+        this._renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
         this._container.appendChild(this._renderer.domElement);
     }
@@ -176,7 +164,7 @@ export class ThreeRenderer implements IRenderer {
     private _initDebugHelper(): void {
         const { isDebug } = this._options;
         if (isDebug) {
-            const axesHelper = new AxesHelper(150);
+            const axesHelper = new THREE.AxesHelper(150);
             this._scene.add(axesHelper);
 
             // TODO: 后期自己写
@@ -186,35 +174,53 @@ export class ThreeRenderer implements IRenderer {
     }
 
     private _playground(): void {
-        const geometry = new BoxGeometry(50, 100, 20);
-        const material = new MeshBasicMaterial({
+        const box = new THREE.BoxGeometry(50, 100, 20);
+        const material = new THREE.MeshLambertMaterial({
             color: 0x00ffff,
             transparent: true, // 开启透明
             opacity: 0.5,
         });
 
-        const material1 = new MeshLambertMaterial({
-            color: 0x00ffff,
-            transparent: true, // 开启透明
-            opacity: 0.5,
+        const floorMaterial = new THREE.MeshLambertMaterial({
+            color: 0x0000ff,
+            // transparent: true, // 开启透明
+            // opacity: 1,
+            side: THREE.DoubleSide,
+            wireframe: true,
         });
 
-        const cube = new Mesh(geometry, material1);
+        const cube = new THREE.Mesh(box, material);
         cube.position.set(0, 0, 0);
-        const cube1 = new Mesh(geometry, material1);
+        const cube1 = new THREE.Mesh(box, material);
         cube1.position.set(120, 0, 0);
 
         this._scene.background = null;
         this._scene.add(cube);
 
-        // const loader = new GLTFLoader();
-        // loader.load('model/keli.gltf', (mmd) => {
-        //     // called when the resource is loaded
-        //     this._animationMixer = new AnimationMixer(mmd.scene);
-        //     const clip = this._animationMixer.clipAction(mmd.animations[0]);
-        //     this._scene.add(mmd.scene);
-        //     clip.play();
-        // });
+        const width = 100;
+        const length = 100;
+        const vertices = new Float32Array([length, 0, width, length, 0, -width, -length, 0, -width, -length, 0, width]);
+        const index = new Uint16Array([0, 1, 2, 0, 2, 3]);
+        const geometry = new THREE.BufferGeometry();
+        const verticeAttributes = new THREE.BufferAttribute(vertices, 3);
+        const indexAttributes = new THREE.BufferAttribute(index, 1);
+        geometry.attributes.position = verticeAttributes;
+        geometry.index = indexAttributes;
+
+        const planeGeometry = new THREE.PlaneGeometry(100, 100, 10, 10);
+
+        const mesh = new THREE.Mesh(planeGeometry, floorMaterial);
+        mesh.rotateX(-Math.PI / 2);
+        this._scene.add(mesh);
+
+        const loader = new GLTFLoader();
+        loader.load('model/keli.gltf', (mmd) => {
+            // called when the resource is loaded
+            this._animationMixer = new THREE.AnimationMixer(mmd.scene);
+            const clip = this._animationMixer.clipAction(mmd.animations[0]);
+            this._scene.add(mmd.scene);
+            clip.play();
+        });
 
         // const loader1 = new FBXLoader();
         // loader1.load('大社.fbx', (mmd) => {

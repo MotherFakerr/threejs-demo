@@ -1,4 +1,3 @@
-import { Scene } from 'three';
 import { EN_CAMERA_TYPE, ICamera, IOrthographicCameraOptions, IPerspectiveCameraOptions } from './camera';
 import { ElementId } from '../id/element_id';
 import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abstract_geo_element';
@@ -8,7 +7,7 @@ export interface IRenderer {
     render(): void;
     resize(width: number, height: number): void;
     getCamera(): ICamera;
-    getScene(): Scene;
+    getScene(): THREE.Scene;
     createGeoElement<T extends AbstractGeoElement>(
         Ctor: GElementClass<T>,
         params: Omit<Parameters<T['create']>[0], keyof IAbstractGeoElementInit>,
