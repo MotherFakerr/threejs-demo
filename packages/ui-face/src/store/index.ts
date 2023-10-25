@@ -5,12 +5,12 @@ import { setupDebuggerUtil } from '../debugger_util';
 export const store = {} as KV;
 
 export function initStore(): void {
-    const { isDebug } = qs.parse(window.location.search.replace('?', ''));
+    const { debug } = qs.parse(window.location.search.replace('?', ''));
 
     const { setIsDebug } = store.appStore as IAppStore;
-    const debug = isDebug === 'true';
-    setIsDebug(debug);
-    if (debug) {
+    const isDebug = debug === 'true';
+    setIsDebug(isDebug);
+    if (isDebug) {
         setupDebuggerUtil();
     }
 }

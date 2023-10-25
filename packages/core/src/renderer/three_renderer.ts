@@ -1,4 +1,4 @@
-import THREE from 'three';
+import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -195,7 +195,7 @@ export class ThreeRenderer implements IRenderer {
         cube1.position.set(120, 0, 0);
 
         this._scene.background = null;
-        this._scene.add(cube);
+        // this._scene.add(cube);
 
         const width = 100;
         const length = 100;

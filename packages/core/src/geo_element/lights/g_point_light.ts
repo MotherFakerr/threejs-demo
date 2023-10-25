@@ -1,4 +1,4 @@
-import THREE from 'three';
+import * as THREE from 'three';
 import { AbstractGeoElement, IAbstractGeoElementInit } from '../abstract_geo_element';
 
 export interface IGPointLightInit extends IAbstractGeoElementInit {

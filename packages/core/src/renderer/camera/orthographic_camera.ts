@@ -1,4 +1,4 @@
-import THREE from 'three';
+import * as THREE from 'three';
 import { AbstractCamera } from './abstract_camera';
 import { IOrthographicCamera, IOrthographicCameraOptions } from './interface';
 
