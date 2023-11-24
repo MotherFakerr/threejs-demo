@@ -1,1 +1,1 @@
-export * from './ambient_light';
+export * from './lights';
