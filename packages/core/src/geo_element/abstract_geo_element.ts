@@ -31,7 +31,7 @@ export abstract class AbstractGeoElement {
         this.notify();
     }
 
-    public getCurRenderer(): IRenderer {
+    public getRenderer(): IRenderer {
         return this._renderer;
     }
 

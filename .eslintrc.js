@@ -28,9 +28,9 @@ module.exports = {
         'no-bitwise': 0,
         // react prop state 允许不解构使用
         'react/destructuring-assignment': 0,
-        // 缩进4个space
+        // 不缩进
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        indent: [2, 4, { SwitchCase: 1 }],
+        indent: 'off',
         // 禁用组件方法排序
         'react/sort-comp': 0,
         // 允许自由使用 _

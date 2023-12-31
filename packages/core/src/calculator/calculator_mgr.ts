@@ -1,10 +1,10 @@
-import { ElementClass } from '../element';
+import { ElementDBClass } from '../database/interface';
 import { ICalculator } from './interface';
 
 class CalculatorMgrImpl {
-    private _calculatorCtorMap = new Map<ElementClass, ICalculator[]>();
+    private _calculatorCtorMap = new Map<ElementDBClass, ICalculator[]>();
 
-    public registerCalculator(EleClazz: ElementClass) {
+    public registerCalculator(EleClazz: ElementDBClass) {
         return (CalculatorClazz: Class) => {
             const calculator = new CalculatorClazz();
             if (this._calculatorCtorMap.has(EleClazz)) {
@@ -15,10 +15,10 @@ class CalculatorMgrImpl {
         };
     }
 
-    public getCalculator(EleClazz: ElementClass): ICalculator[] {
-        const calculators = this._calculatorCtorMap.get(EleClazz);
+    public getCalculator(Clazz: ElementDBClass): ICalculator[] {
+        const calculators = this._calculatorCtorMap.get(Clazz);
         if (!calculators) {
-            console.error(`${EleClazz}的calculator未注册`);
+            console.error(`${Clazz}的calculator未注册`);
         }
         return calculators ?? [];
     }

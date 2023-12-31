@@ -1,8 +1,8 @@
-import { IAbstractGraphicElement } from '../element';
+import { AbstractDB } from '../database';
 import { AbstractGeoElement } from '../geo_element';
 import { ICalculator, ICalculatorWatchProperties } from './interface';
 
-export abstract class AbstractCalculator<T extends IAbstractGraphicElement> implements ICalculator<T> {
+export abstract class AbstractCalculator<T extends AbstractDB> implements ICalculator<T> {
     public ifUpdate(keys: string[]): boolean {
         const watchKeys = this._watch() as string[];
         return !!keys.find((key) => watchKeys.includes(key));
