@@ -1,4 +1,4 @@
-import { AbstractGraphicDB } from '@threejs-demo/core/src/database/abstract_graphic_db';
+import { AbstractGraphicDB } from '@threejs-demo/core';
 
 export class AmbientLightDB extends AbstractGraphicDB {
     public color = 0;
