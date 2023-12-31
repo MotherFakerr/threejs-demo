@@ -13,8 +13,8 @@ if (fs.existsSync('./src/index.tsx')) {
     entryFile = './src/index.ts';
 }
 
-module.exports = (mode) => {
-	const config = {
+module.exports = (_, { mode }) => {
+    const config = {
         entry: resolve(entryFile),
         output: {
             filename: 'main.js',
@@ -36,7 +36,7 @@ module.exports = (mode) => {
                     //    use: ['style-loader', 'css-loader']
                     use: [MiniCssExtractPlugin.loader, 'css-loader'],
                 },
-    
+
                 {
                     test: /\.less$/,
                     use: [
@@ -93,7 +93,7 @@ module.exports = (mode) => {
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
         },
-    
+
         devServer: {
             host: 'localhost',
             compress: true,
@@ -117,10 +117,9 @@ module.exports = (mode) => {
             // },
             // port: 8000,
         },
-    }
-    config.devtool= mode === 'development' ? 'source-map' : undefined;
-    config.mode= mode === 'development' ? 'development' : 'production';
+    };
+    config.devtool = mode === 'development' ? 'source-map' : undefined;
+    config.mode = mode === 'development' ? 'development' : 'production';
 
-    return config
-    
+    return config;
 };
