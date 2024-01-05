@@ -14,7 +14,7 @@ if (fs.existsSync('./src/index.tsx')) {
 }
 
 module.exports = (mode) => {
-	const config = {
+    const config = {
         entry: resolve(entryFile),
         output: {
             filename: 'main.js',
@@ -33,10 +33,9 @@ module.exports = (mode) => {
                 },
                 {
                     test: /\.css$/,
-                    //    use: ['style-loader', 'css-loader']
                     use: [MiniCssExtractPlugin.loader, 'css-loader'],
                 },
-    
+
                 {
                     test: /\.less$/,
                     use: [
@@ -64,7 +63,7 @@ module.exports = (mode) => {
                     },
                 },
                 {
-                    test: /\.(pmx|vmd|gltf|fbx)$/i,
+                    test: /\.(pmx|vmd|gltf|glb|fbx)$/i,
                     use: [
                         {
                             loader: 'file-loader',
@@ -78,49 +77,26 @@ module.exports = (mode) => {
         },
         plugins: [
             new WebpackBarPlugin(),
-            // new ForkTsCheckerWebpackPlugin({
-            //     tsconfig: resolve(__dirname, '../tsconfig.json'),
-            //     // eslint: true,
-            //     async: tsCheckerAsync,
-            // }),
             new MiniCssExtractPlugin(),
             new HtmlWebpackPlugin({
                 filename: 'index.html',
                 template: resolve(__dirname, './index.html'),
-                // favicon: resolve(__dirname, './favicon.ico'),
             }),
         ],
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
         },
-    
+
         devServer: {
             host: 'localhost',
             compress: true,
             static: {
                 directory: resolve(__dirname, '../'),
             },
-            // stats: {
-            //     assets: false,
-            //     builtAt: true,
-            //     modules: false,
-            //     entrypoints: false,
-            //     /**
-            //      * ts-node transpileOnly: true
-            //      * if you enable this option, webpack 4 will give you "export not found" warnings any time you re-export a type:
-            //      * The reason this happens is that when typescript doesn't do a full type check,
-            //      * it does not have enough information to determine whether an imported name is a type or not,
-            //      * so when the name is then exported, typescript has no choice but to emit the export.
-            //      * Fortunately, the extraneous export should not be harmful, so you can just suppress these warnings:
-            //      */
-            //     warningsFilter: /export .* was not found in/,
-            // },
-            // port: 8000,
         },
-    }
-    config.devtool= mode === 'development' ? 'source-map' : undefined;
-    config.mode= mode === 'development' ? 'development' : 'production';
+    };
+    config.devtool = mode === 'development' ? 'source-map' : undefined;
+    config.mode = mode === 'development' ? 'development' : 'production';
 
-    return config
-    
+    return config;
 };
