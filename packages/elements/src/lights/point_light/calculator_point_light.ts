@@ -1,17 +1,17 @@
 import { AbstractCalculator, AbstractGeoElement, CalculatorMgr, GPointLight, ICalculatorWatchProperties } from '@threejs-demo/core';
-import { PointLightElement } from './point_light';
+import { PointLightDB } from './point_light_db';
 
-@CalculatorMgr.registerCalculator(PointLightElement)
-export class CalculatorPointLight extends AbstractCalculator<PointLightElement> {
-    public async execute(element: PointLightElement): Promise<AbstractGeoElement[]> {
-        const { color, intensity, position } = element;
-        const renderer = element.getCurDoc().getSysView().getRenderer();
+@CalculatorMgr.registerCalculator(PointLightDB)
+export class CalculatorPointLight extends AbstractCalculator<PointLightDB> {
+    public async execute(db: PointLightDB): Promise<AbstractGeoElement[]> {
+        const { color, intensity, position } = db;
+        const renderer = db.getRenderer();
         const geo = renderer.createGeoElement(GPointLight, { color, intensity, position });
-        element.setGeoElements([geo]);
+        db.setGeoElements([geo]);
         return [geo];
     }
 
-    protected _watch(): ICalculatorWatchProperties<PointLightElement>[] {
+    protected _watch(): ICalculatorWatchProperties<PointLightDB>[] {
         return ['color', 'intensity'];
     }
 }

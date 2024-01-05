@@ -22,10 +22,6 @@ export class SysDocument implements ISysDocument {
         this._elementMgr = new ElementMgr();
     }
 
-    /**
-     * @deprecated
-     * @returns
-     */
     public getSysView(): ISysView {
         return this._view;
     }
@@ -35,7 +31,7 @@ export class SysDocument implements ISysDocument {
     }
 
     public async createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['create']>[0]): Promise<T> {
-        const element = await new Ctor(this as ISysDocument, this._idPool).create({ ...params });
+        const element = await new Ctor(this._view, this._idPool).create({ ...params });
         this._elementMgr.addElements(element);
         return element;
     }
@@ -63,7 +59,7 @@ export class SysDocument implements ISysDocument {
     public getOrCreateUniqueElement<T extends AbstractUniqueElement>(Ctor: UniqueElementClass<T>): T {
         let element = this._elementMgr.getUniqueElementByCtor<T>(Ctor);
         if (!element) {
-            element = new Ctor(this as ISysDocument, this._idPool);
+            element = new Ctor(this._view, this._idPool);
             this._elementMgr.addUniqueElementByCtor(Ctor, element);
         }
         return element;
@@ -72,7 +68,7 @@ export class SysDocument implements ISysDocument {
     public getOrCreateUniqueGraphicElement<T extends AbstractUniqueGraphicElement>(Ctor: UniqueGraphicElementClass<T>): T {
         let element = this._elementMgr.getUniqueElementByCtor<T>(Ctor);
         if (!element) {
-            element = new Ctor(this as ISysDocument, this._idPool);
+            element = new Ctor(this._view, this._idPool);
             this._elementMgr.addUniqueElementByCtor(Ctor, element);
         }
         return element;

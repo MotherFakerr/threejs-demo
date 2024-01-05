@@ -37,7 +37,7 @@ export class DebuggerStore implements IDebuggerStore {
 
     private _setAmbientDebug(): void {
         const ambientLight = this.view.getDocument().getOrCreateUniqueElement(AmbientLightElement);
-        this.gui.add(ambientLight, 'intensity', 0, 2.0).onChange((v) => {
+        this.gui.add({ ...ambientLight.db }, 'intensity', 0, 2.0).onChange((v) => {
             ambientLight.update({ intensity: v });
         });
     }

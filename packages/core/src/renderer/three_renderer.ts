@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { IRenderer, IThreeRenderOptions } from './interface';
 import { PerspectiveCamera } from './camera/perspective_camera';
 import { EN_CAMERA_TYPE, ICamera, OrthographicCamera } from './camera';
@@ -10,7 +11,10 @@ import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abst
 import { GElementClass } from '../geo_element/interface';
 import { ElementIdPool } from '../id/id_pool';
 import { ElementId } from '../id/element_id';
-import QB from '@threejs-demo/assets/images/qb.png'
+import QB from '@threejs-demo/assets/images/qb.png';
+// import nx from './环境贴图1/nx.jpg'
+import nx from '@threejs-demo/assets/images/qb.jpg';
+
 export class ThreeRenderer implements IRenderer {
     private readonly _geoElementMgr: GeoElementMgr;
 
@@ -210,7 +214,7 @@ export class ThreeRenderer implements IRenderer {
             // // opacity: 1,
             // side: THREE.DoubleSide,
             // wireframe: true,
-            map: texture,
+            // map: texture,
         });
 
         const floor = new THREE.Mesh(planeGeometry, floorMaterial);
@@ -223,18 +227,30 @@ export class ThreeRenderer implements IRenderer {
             const model = mmd.scene;
             this._animationMixer = new THREE.AnimationMixer(model);
             const clip = this._animationMixer.clipAction(mmd.animations[0]);
-            const meshAxesHelper = new THREE.AxesHelper(500);
-            model.add(meshAxesHelper);
             this._scene.add(model);
 
             clip.play();
         });
 
-        // const loader1 = new FBXLoader();
-        // loader1.load('大社.fbx', (mmd) => {
-        //     // called when the resource is loaded
-        //     debugger;
-        //     // this._scene.add(mmd);
-        // });
+        const loader1 = new FBXLoader();
+        loader1.load('大社.fbx', (mmd) => {
+            mmd.traverse((child) => {
+                if ((child as THREE.Mesh).isMesh) {
+                    child.material = new THREE.MeshLambertMaterial({
+                        color: 0x004444,
+                        transparent: true,
+                        opacity: 0.5,
+                    });
+                    // 模型边线设置
+                    const edges = new THREE.EdgesGeometry(child.geometry);
+                    const edgesMaterial = new THREE.LineBasicMaterial({
+                        color: 0x00ffff,
+                    });
+                    const line = new THREE.LineSegments(edges, edgesMaterial);
+                    child.add(line);
+                }
+            });
+            this._scene.add(mmd);
+        });
     }
 }

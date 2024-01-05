@@ -1,17 +1,17 @@
 import { AbstractCalculator, AbstractGeoElement, CalculatorMgr, GAmbientLight, ICalculatorWatchProperties } from '@threejs-demo/core';
-import { AmbientLightElement } from './ambient_light';
+import { AmbientLightDB } from './ambient_light_db';
 
-@CalculatorMgr.registerCalculator(AmbientLightElement)
-export class CalculatorAmbientLight extends AbstractCalculator<AmbientLightElement> {
-    public async execute(element: AmbientLightElement): Promise<AbstractGeoElement[]> {
-        const { color, intensity } = element;
-        const renderer = element.getCurDoc().getSysView().getRenderer();
+@CalculatorMgr.registerCalculator(AmbientLightDB)
+export class CalculatorAmbientLight extends AbstractCalculator<AmbientLightDB> {
+    public async execute(db: AmbientLightDB): Promise<AbstractGeoElement[]> {
+        const { color, intensity } = db;
+        const renderer = db.getView().getRenderer();
         const geo = renderer.createGeoElement(GAmbientLight, { color, intensity });
-        element.setGeoElements([geo]);
+        db.setGeoElements([geo]);
         return [geo];
     }
 
-    protected _watch(): ICalculatorWatchProperties<AmbientLightElement>[] {
+    protected _watch(): ICalculatorWatchProperties<AmbientLightDB>[] {
         return ['color', 'intensity'];
     }
 }
