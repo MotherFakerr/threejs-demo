@@ -33,7 +33,6 @@ module.exports = (_, { mode }) => {
                 },
                 {
                     test: /\.css$/,
-                    //    use: ['style-loader', 'css-loader']
                     use: [MiniCssExtractPlugin.loader, 'css-loader'],
                 },
 
@@ -64,7 +63,7 @@ module.exports = (_, { mode }) => {
                     },
                 },
                 {
-                    test: /\.(pmx|vmd|gltf|fbx)$/i,
+                    test: /\.(pmx|vmd|gltf|glb|fbx)$/i,
                     use: [
                         {
                             loader: 'file-loader',
@@ -78,16 +77,10 @@ module.exports = (_, { mode }) => {
         },
         plugins: [
             new WebpackBarPlugin(),
-            // new ForkTsCheckerWebpackPlugin({
-            //     tsconfig: resolve(__dirname, '../tsconfig.json'),
-            //     // eslint: true,
-            //     async: tsCheckerAsync,
-            // }),
             new MiniCssExtractPlugin(),
             new HtmlWebpackPlugin({
                 filename: 'index.html',
                 template: resolve(__dirname, './index.html'),
-                // favicon: resolve(__dirname, './favicon.ico'),
             }),
         ],
         resolve: {
@@ -100,22 +93,6 @@ module.exports = (_, { mode }) => {
             static: {
                 directory: resolve(__dirname, '../'),
             },
-            // stats: {
-            //     assets: false,
-            //     builtAt: true,
-            //     modules: false,
-            //     entrypoints: false,
-            //     /**
-            //      * ts-node transpileOnly: true
-            //      * if you enable this option, webpack 4 will give you "export not found" warnings any time you re-export a type:
-            //      * The reason this happens is that when typescript doesn't do a full type check,
-            //      * it does not have enough information to determine whether an imported name is a type or not,
-            //      * so when the name is then exported, typescript has no choice but to emit the export.
-            //      * Fortunately, the extraneous export should not be harmful, so you can just suppress these warnings:
-            //      */
-            //     warningsFilter: /export .* was not found in/,
-            // },
-            // port: 8000,
         },
     };
     config.devtool = mode === 'development' ? 'source-map' : undefined;
