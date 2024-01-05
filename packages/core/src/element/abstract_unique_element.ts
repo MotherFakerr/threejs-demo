@@ -5,5 +5,5 @@ import { IElementCreateArgs, IElementUpdateArgs } from './interface';
 export abstract class AbstractUniqueElement<
     D extends AbstractDB = AbstractDB,
     C extends IElementCreateArgs = IElementCreateArgs,
-    U extends IElementUpdateArgs = C,
+    U extends IElementUpdateArgs = Partial<C>,
 > extends AbstractElement<D, C, U> {}

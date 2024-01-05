@@ -1,5 +1,4 @@
 import { AbstractUniqueGraphicElement, DBManager } from '@threejs-demo/core';
-import { Vector3 } from '@threejs-demo/math';
 import { PointLightDB } from './point_light_db';
 
 export interface IPointLightParams {
@@ -13,14 +12,12 @@ export interface IPointLightParams {
 @DBManager.registerElementDB(PointLightDB)
 export class PointLightElement extends AbstractUniqueGraphicElement<PointLightDB, IPointLightParams> {
     protected async _createDB(args: IPointLightParams): Promise<void> {
-        const { position, color, intensity, distance, decay } = args;
-        this.db.position = position ?? new Vector3();
-        this.db.color = color ?? 0xfffff;
-        this.db.intensity = intensity ?? 0;
+        await this._updateDB(args);
     }
 
     protected async _updateDB(args: IPointLightParams): Promise<void> {
-        const { color, intensity } = args;
+        const { position, color, intensity, distance, decay } = args;
+        if (position) this.db.position = position;
         if (color) this.db.color = color;
         if (intensity) this.db.intensity = intensity;
     }

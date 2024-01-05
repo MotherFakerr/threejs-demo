@@ -13,12 +13,28 @@ export abstract class AbstractElement<D extends AbstractDB, C extends IElementCr
 
     protected _db: D;
 
+    private _dbEditable = false;
+
     constructor(view: ISysView, idPool: ElementIdPool) {
         this._view = view;
         // eslint-disable-next-line no-proto
         const Ctor = (this as ANY).__proto__.constructor as ElementClass;
         const DbCtor = DBManager.getDBCtor(Ctor);
-        this._db = new DbCtor(view, new ElementId(idPool)) as D;
+        this._db = new Proxy(new DbCtor(view, new ElementId(idPool)) as D, {
+            set: (target: D, p: string, value) => {
+                if (p === '_id' || p === '_view') {
+                    throw new Error("id & view can't be edited");
+                }
+
+                if (!this._dbEditable) {
+                    throw new Error("db should be edited through element's update method!!!");
+                }
+
+                // eslint-disable-next-line no-param-reassign
+                target[p] = value;
+                return true;
+            },
+        });
     }
 
     public get id(): ElementId {
@@ -42,12 +58,16 @@ export abstract class AbstractElement<D extends AbstractDB, C extends IElementCr
     }
 
     public async create(args: C): Promise<this> {
+        this._dbEditable = true;
         await this._createDB(args);
+        this._dbEditable = false;
         return this;
     }
 
     public async update(args: U): Promise<this> {
+        this._dbEditable = true;
         await this._updateDB(args);
+        this._dbEditable = false;
         return this;
     }
 

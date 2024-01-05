@@ -4,7 +4,7 @@ import { Vector3 } from '@threejs-demo/math';
 export class PointLightDB extends AbstractGraphicDB {
     public position = Vector3.O();
 
-    public color = 0;
+    public color = 0xfffff;
 
     public intensity = 0;
 

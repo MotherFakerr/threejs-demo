@@ -21,7 +21,7 @@ export abstract class AbstractGraphicElement<D extends AbstractDB, C extends IEl
     }
 
     public async create(args: C, disableRender?: boolean): Promise<this> {
-        await this._createDB(args);
+        super.create(args);
         if (!disableRender) {
             for (const observer of this._calculatorObservers) {
                 // eslint-disable-next-line no-await-in-loop
@@ -33,7 +33,7 @@ export abstract class AbstractGraphicElement<D extends AbstractDB, C extends IEl
 
     public async update(args: U, disableRender?: boolean): Promise<this> {
         const oldDB = this.db.dump();
-        await this._updateDB(args);
+        super.update(args);
         const newDB = this.db.dump();
         if (!disableRender) {
             const updateKeys: string[] = [];

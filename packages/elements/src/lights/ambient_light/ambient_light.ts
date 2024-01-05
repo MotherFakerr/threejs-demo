@@ -8,9 +8,7 @@ export interface IAmbientLightParams {
 @DBManager.registerElementDB(AmbientLightDB)
 export class AmbientLightElement extends AbstractUniqueGraphicElement<AmbientLightDB, IAmbientLightParams, IAmbientLightParams> {
     protected async _createDB(args: IAmbientLightParams): Promise<void> {
-        const { color, intensity } = args;
-        this.db.color = color ?? 0xfffff;
-        this.db.intensity = intensity ?? 0;
+        await this._updateDB(args);
     }
 
     protected async _updateDB(args: IAmbientLightParams): Promise<void> {
