@@ -1,7 +1,11 @@
 import { AbstractGeoElement } from '../geo_element';
 import { AbstractDB } from './abstract_db';
+import { IAbstractGraphicDB } from './interface';
 
-export abstract class AbstractGraphicDB<T extends AbstractGeoElement = AbstractGeoElement> extends AbstractDB {
+export abstract class AbstractGraphicDB<T extends AbstractGeoElement = AbstractGeoElement>
+    extends AbstractDB
+    implements IAbstractGraphicDB<T>
+{
     protected _geoElements: T[];
 
     public get geoElements(): T[] {
@@ -25,7 +29,7 @@ export abstract class AbstractGraphicDB<T extends AbstractGeoElement = AbstractG
             });
 
             // 删除不复用element
-            this.getRenderer().delElementsByIds(...delIDs);
+            this.getRenderer().delGeoElementsByIds(...delIDs);
         }
 
         this._geoElements = eles;

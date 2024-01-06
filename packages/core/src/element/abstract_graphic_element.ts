@@ -1,11 +1,16 @@
 import { CalculatorMgr, ICalculator } from '../calculator';
-import { AbstractDB, DBManager } from '../database';
+import { DBManager } from '../database';
+import { IAbstractGraphicDB } from '../database/interface';
 import { ElementIdPool } from '../id/id_pool';
 import { ISysView } from '../sys_view';
 import { AbstractElement } from './abstract_element';
 import { ElementClass, IAbstractGraphicElement, IElementCreateArgs, IElementUpdateArgs } from './interface';
 
-export abstract class AbstractGraphicElement<D extends AbstractDB, C extends IElementCreateArgs, U extends IElementUpdateArgs>
+export abstract class AbstractGraphicElement<
+        D extends IAbstractGraphicDB = IAbstractGraphicDB,
+        C extends IElementCreateArgs = IElementCreateArgs,
+        U extends IElementUpdateArgs = Partial<C>,
+    >
     extends AbstractElement<D, C, U>
     implements IAbstractGraphicElement
 {

@@ -1,4 +1,5 @@
-import { AbstractDB, DBManager } from '../database';
+import { DBManager } from '../database';
+import { IAbstractDB } from '../database/interface';
 import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
 import { IRenderer } from '../renderer';
@@ -6,8 +7,8 @@ import { ISysDocument } from '../sys_document/interface';
 import { ISysView } from '../sys_view';
 import { ElementClass, IAbstractElement, IElementCreateArgs, IElementUpdateArgs } from './interface';
 
-export abstract class AbstractElement<D extends AbstractDB, C extends IElementCreateArgs, U extends IElementUpdateArgs>
-    implements IAbstractElement
+export abstract class AbstractElement<D extends IAbstractDB, C extends IElementCreateArgs, U extends IElementUpdateArgs>
+    implements IAbstractElement<D>
 {
     protected _view: ISysView;
 

@@ -72,18 +72,18 @@ export class ThreeRenderer implements IRenderer {
         return element;
     }
 
-    public getElementById(eleId: number | ElementId): AbstractGeoElement | undefined {
-        const id = eleId instanceof ElementId ? eleId.toNum() : eleId;
+    public getGeoElementById(gId: number | ElementId): AbstractGeoElement | undefined {
+        const id = gId instanceof ElementId ? gId.toNum() : gId;
         return this._geoElementMgr.getElementById(id);
     }
 
-    public getElementsByIds(...eleIds: (number | ElementId)[]): AbstractGeoElement[] {
-        const ids = eleIds.map((id) => (id instanceof ElementId ? id.toNum() : id));
+    public getGeoElementsByIds(...gId: (number | ElementId)[]): AbstractGeoElement[] {
+        const ids = gId.map((id) => (id instanceof ElementId ? id.toNum() : id));
         return this._geoElementMgr.getElementsByIds(...ids);
     }
 
-    public delElementsByIds(...eleIds: (number | ElementId)[]): void {
-        const ids = eleIds.map((id) => (id instanceof ElementId ? id.toNum() : id));
+    public delGeoElementsByIds(...gId: (number | ElementId)[]): void {
+        const ids = gId.map((id) => (id instanceof ElementId ? id.toNum() : id));
         const elements = this._geoElementMgr.getElementsByIds(...ids);
         this._scene.remove(
             ...elements.reduce((allEles, ele) => {

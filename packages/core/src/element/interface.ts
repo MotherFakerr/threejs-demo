@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
+import { IAbstractDB, IAbstractGraphicDB } from '../database/interface';
 import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
 import { IRenderer } from '../renderer/interface';
@@ -7,12 +7,17 @@ import { ISysView } from '../sys_view/interface';
 import { AbstractUniqueElement } from './abstract_unique_element';
 import { AbstractUniqueGraphicElement } from './abstract_unique_graphic_element';
 
-export interface IElementCreateArgs {}
+export interface IElementCreateArgs {
+    [k: string]: ANY;
+}
 
-export interface IElementUpdateArgs {}
+export interface IElementUpdateArgs {
+    [k: string]: ANY;
+}
 
-export interface IAbstractElement {
+export interface IAbstractElement<D extends IAbstractDB = IAbstractDB> {
     id: ElementId;
+    db: D;
     create(args: IElementCreateArgs): Promise<this>;
     update(args: IElementUpdateArgs, disableRender?: boolean): Promise<this>;
     getDoc(): ISysDocument;
@@ -20,7 +25,9 @@ export interface IAbstractElement {
     getRenderer(): IRenderer;
 }
 
-export type IAbstractGraphicElement = IAbstractElement;
+export interface IAbstractGraphicElement<D extends IAbstractGraphicDB = IAbstractGraphicDB> extends IAbstractElement {
+    db: D;
+}
 
 export type ElementClass<T extends IAbstractElement = IAbstractElement> = {
     new (view: ISysView, idPool: ElementIdPool): T;

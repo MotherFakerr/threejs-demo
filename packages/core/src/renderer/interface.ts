@@ -12,9 +12,9 @@ export interface IRenderer {
         Ctor: GElementClass<T>,
         params: Omit<Parameters<T['create']>[0], keyof IAbstractGeoElementInit>,
     ): T;
-    getElementById(eleId: number | ElementId): AbstractGeoElement | undefined;
-    getElementsByIds(...eleIds: (number | ElementId)[]): AbstractGeoElement[];
-    delElementsByIds(...eleIds: (number | ElementId)[]): void;
+    getGeoElementById(eleId: number | ElementId): AbstractGeoElement | undefined;
+    getGeoElementsByIds(...eleIds: (number | ElementId)[]): AbstractGeoElement[];
+    delGeoElementsByIds(...eleIds: (number | ElementId)[]): void;
     getAllElements(): AbstractGeoElement[];
 }
 

@@ -1,4 +1,4 @@
-import { AbstractUniqueElement, AbstractUniqueGraphicElement } from '../element';
+import { AbstractGraphicElement, AbstractUniqueElement, AbstractUniqueGraphicElement } from '../element';
 import { ElementClass, IAbstractElement, UniqueElementClass, UniqueGraphicElementClass } from '../element/interface';
 import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abstract_geo_element';
 import { GElementClass } from '../geo_element/interface';
@@ -48,6 +48,16 @@ export class SysDocument implements ISysDocument {
 
     public delElementsByIds(...eleIds: (number | ElementId)[]): void {
         const ids = eleIds.map((id) => (id instanceof ElementId ? id.toNum() : id));
+        // 关联删除所有几何元素
+        const geoElements = this._elementMgr.getElementsByIds(...ids).reduce((all, ele) => {
+            if (ele instanceof AbstractGraphicElement) {
+                all.push(...(ele as AbstractGraphicElement).db.geoElements);
+                return all;
+            }
+            return all;
+        }, [] as AbstractGeoElement[]);
+        this.getRenderer().delGeoElementsByIds(...geoElements.map((ele) => ele.id));
+
         this._elementMgr.delElementsByIds(...ids);
         this._idPool.recycleIds(...ids);
     }
