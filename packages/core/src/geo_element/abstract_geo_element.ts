@@ -1,5 +1,5 @@
 import { ElementId } from '../id/element_id';
-import { IRenderer } from '../renderer';
+import { IRenderDocument } from '../renderer';
 import { ElementIdPool } from '../id/id_pool';
 
 export interface IAbstractGeoElementInit {
@@ -9,11 +9,11 @@ export interface IAbstractGeoElementInit {
 export abstract class AbstractGeoElement {
     protected _id: ElementId;
 
-    protected _renderer: IRenderer;
+    protected _renderer: IRenderDocument;
 
     protected abstract _renderObject: THREE.Object3D;
 
-    constructor(renderer: IRenderer, idPool: ElementIdPool) {
+    constructor(renderer: IRenderDocument, idPool: ElementIdPool) {
         this._renderer = renderer;
         this._id = new ElementId(idPool);
     }
@@ -31,7 +31,7 @@ export abstract class AbstractGeoElement {
         this.notify();
     }
 
-    public getRenderer(): IRenderer {
+    public getRenderer(): IRenderDocument {
         return this._renderer;
     }
 

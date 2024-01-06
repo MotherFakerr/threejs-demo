@@ -2,7 +2,7 @@ import { DBManager } from '../database';
 import { IAbstractDB } from '../database/interface';
 import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
-import { IRenderer } from '../renderer';
+import { IRenderDocument } from '../renderer';
 import { ISysDocument } from '../sys_document/interface';
 import { ISysView } from '../sys_view';
 import { ElementClass, IAbstractElement, IElementCreateArgs, IElementUpdateArgs } from './interface';
@@ -54,7 +54,7 @@ export abstract class AbstractElement<D extends IAbstractDB, C extends IElementC
         return this._view;
     }
 
-    public getRenderer(): IRenderer {
+    public getRenderer(): IRenderDocument {
         return this._view.getRenderer();
     }
 

@@ -4,7 +4,7 @@ import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abst
 import { GElementClass } from '../geo_element/interface';
 import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
-import { IRenderer } from '../renderer';
+import { IRenderDocument } from '../renderer';
 import { ISysView } from '../sys_view';
 import { ElementMgr } from './element_mgr';
 import { ISysDocument } from './interface';
@@ -26,7 +26,7 @@ export class SysDocument implements ISysDocument {
         return this._view;
     }
 
-    public getRenderer(): IRenderer {
+    public getRenderer(): IRenderDocument {
         return this._view.getRenderer();
     }
 

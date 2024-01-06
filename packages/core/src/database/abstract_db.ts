@@ -1,5 +1,5 @@
 import { ElementId } from '../id';
-import { IRenderer } from '../renderer/interface';
+import { IRenderDocument } from '../renderer/i_render_document';
 import { ISysDocument } from '../sys_document/interface';
 import { ISysView } from '../sys_view/interface';
 import { IAbstractDB } from './interface';
@@ -26,7 +26,7 @@ export abstract class AbstractDB implements IAbstractDB {
         return this._view;
     }
 
-    public getRenderer(): IRenderer {
+    public getRenderer(): IRenderDocument {
         return this._view.getRenderer();
     }
 

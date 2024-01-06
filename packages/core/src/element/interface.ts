@@ -1,7 +1,7 @@
 import { IAbstractDB, IAbstractGraphicDB } from '../database/interface';
 import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
-import { IRenderer } from '../renderer/interface';
+import { IRenderDocument } from '../renderer/i_render_document';
 import { ISysDocument } from '../sys_document/interface';
 import { ISysView } from '../sys_view/interface';
 import { AbstractUniqueElement } from './abstract_unique_element';
@@ -22,7 +22,7 @@ export interface IAbstractElement<D extends IAbstractDB = IAbstractDB> {
     update(args: IElementUpdateArgs, disableRender?: boolean): Promise<this>;
     getDoc(): ISysDocument;
     getView(): ISysView;
-    getRenderer(): IRenderer;
+    getRenderer(): IRenderDocument;
 }
 
 export interface IAbstractGraphicElement<D extends IAbstractGraphicDB = IAbstractGraphicDB> extends IAbstractElement {

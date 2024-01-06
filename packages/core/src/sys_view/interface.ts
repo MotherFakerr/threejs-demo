@@ -1,14 +1,10 @@
-import { IRenderer, IThreeRenderOptions } from '../renderer/interface';
+import { IRenderDocument, IThreeRenderOptions } from '../renderer/i_render_document';
 import { ISysDocument } from '../sys_document/interface';
 
 export interface ISysView {
-    getRenderer(): IRenderer;
+    getRenderer(): IRenderDocument;
     getDocument(): ISysDocument;
     updateView(): void;
-    updateCamera(): void;
-    resize(): void;
 }
 
-export interface ISysViewOptions extends IThreeRenderOptions {
-    autoResize?: boolean;
-}
+export type ISysViewOptions = IThreeRenderOptions;
