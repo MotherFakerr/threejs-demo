@@ -1,5 +1,5 @@
 import { AbstractDB } from '../database';
-import { AbstractGeoElement } from '../geo_element';
+import { IAbstractGeoElement } from '../geo_element';
 import { ICalculator, ICalculatorWatchProperties } from './interface';
 
 export abstract class AbstractCalculator<T extends AbstractDB> implements ICalculator<T> {
@@ -8,7 +8,7 @@ export abstract class AbstractCalculator<T extends AbstractDB> implements ICalcu
         return !!keys.find((key) => watchKeys.includes(key));
     }
 
-    public abstract execute(element: T): Promise<AbstractGeoElement[]>;
+    public abstract execute(element: T): Promise<IAbstractGeoElement[]>;
 
     protected abstract _watch(): ICalculatorWatchProperties<T>[];
 }

@@ -22,7 +22,7 @@ export interface IAbstractElement<D extends IAbstractDB = IAbstractDB> {
     update(args: IElementUpdateArgs, disableRender?: boolean): Promise<this>;
     getDoc(): ISysDocument;
     getView(): ISysView;
-    getRenderer(): IRenderDocument;
+    getRenderDoc(): IRenderDocument;
 }
 
 export interface IAbstractGraphicElement<D extends IAbstractGraphicDB = IAbstractGraphicDB> extends IAbstractElement {

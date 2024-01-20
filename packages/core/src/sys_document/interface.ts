@@ -10,7 +10,7 @@ export interface ISysDocument {
      * @deprecated
      */
     getSysView(): ISysView;
-    getRenderer(): IRenderDocument;
+    getRenderDoc(): IRenderDocument;
     createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['create']>[0]): Promise<T>;
     getElementById(eleId: number | ElementId): IAbstractElement | undefined;
     getElementsByIds(...eleIds: (number | ElementId)[]): IAbstractElement[];

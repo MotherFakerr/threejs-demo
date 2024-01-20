@@ -8,6 +8,7 @@ import { IThreeRenderOptions } from './i_render_document';
 import { IThreeRenderer } from './i_renderer';
 import { PerspectiveCamera } from './camera/perspective_camera';
 import { OrthographicCamera } from './camera/orthographic_camera';
+import { AnimationMixerMgr } from '../element_mgr';
 
 export class ThreeRenderer implements IThreeRenderer {
     private _scene: THREE.Scene;
@@ -18,11 +19,9 @@ export class ThreeRenderer implements IThreeRenderer {
 
     private _stats: Stats | undefined;
 
-    private _animationMixer: THREE.AnimationMixer;
-
     private _clock: THREE.Clock;
 
-    constructor(private _container: HTMLElement, private _options: IThreeRenderOptions) {
+    constructor(private _container: HTMLElement, private _animationMixerMgr: AnimationMixerMgr, private _options: IThreeRenderOptions) {
         this._scene = new THREE.Scene();
         this._clock = new THREE.Clock();
         this._initCamera();
@@ -64,9 +63,11 @@ export class ThreeRenderer implements IThreeRenderer {
             this._stats.update();
         }
 
-        if (this._animationMixer) {
-            this._animationMixer.update(this._clock.getDelta());
+        const allAnimationMixers = this._animationMixerMgr.getAllAnimationMixers();
+        for (const mixer of allAnimationMixers) {
+            mixer.instance.update(this._clock.getDelta());
         }
+
         this.render();
         requestAnimationFrame(this._requestAnimationFrame.bind(this));
     }
@@ -186,6 +187,8 @@ export class ThreeRenderer implements IThreeRenderer {
             this._animationMixer = new THREE.AnimationMixer(model);
             const clip = this._animationMixer.clipAction(mmd.animations[0]);
             this._scene.add(model);
+
+            new THREE.AnimationClip();
 
             clip.play();
         });

@@ -54,8 +54,8 @@ export abstract class AbstractElement<D extends IAbstractDB, C extends IElementC
         return this._view;
     }
 
-    public getRenderer(): IRenderDocument {
-        return this._view.getRenderer();
+    public getRenderDoc(): IRenderDocument {
+        return this._view.getRenderDoc();
     }
 
     public async create(args: C): Promise<this> {

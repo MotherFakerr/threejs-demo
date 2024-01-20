@@ -2,6 +2,7 @@ import { EN_CAMERA_TYPE, ICamera, IOrthographicCameraOptions, IPerspectiveCamera
 import { ElementId } from '../id/element_id';
 import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abstract_geo_element';
 import { GElementClass } from '../geo_element/interface';
+import { AnimationMixer } from '../animation/animation_mixer';
 
 export interface IRenderDocument {
     updateView(): void;
@@ -13,7 +14,13 @@ export interface IRenderDocument {
     getGeoElementById(eleId: number | ElementId): AbstractGeoElement | undefined;
     getGeoElementsByIds(...eleIds: (number | ElementId)[]): AbstractGeoElement[];
     delGeoElementsByIds(...eleIds: (number | ElementId)[]): void;
-    getAllElements(): AbstractGeoElement[];
+    getAllGeoElements(): AbstractGeoElement[];
+
+    createAnimationMixer(geoElement: AbstractGeoElement): AnimationMixer;
+    getAnimationMixerById(aId: number | ElementId): AnimationMixer | undefined;
+    getAnimationMixersByIds(...aId: (number | ElementId)[]): AnimationMixer[];
+    delAnimationMixersByIds(...aId: (number | ElementId)[]): void;
+    getAllAnimationMixers(): AnimationMixer[];
 }
 
 export interface IThreeRenderOptions {

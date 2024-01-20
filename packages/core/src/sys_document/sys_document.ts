@@ -6,7 +6,7 @@ import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
 import { IRenderDocument } from '../renderer';
 import { ISysView } from '../sys_view';
-import { ElementMgr } from './element_mgr';
+import { ElementMgr } from '../element_mgr/element_mgr';
 import { ISysDocument } from './interface';
 
 export class SysDocument implements ISysDocument {
@@ -26,8 +26,8 @@ export class SysDocument implements ISysDocument {
         return this._view;
     }
 
-    public getRenderer(): IRenderDocument {
-        return this._view.getRenderer();
+    public getRenderDoc(): IRenderDocument {
+        return this._view.getRenderDoc();
     }
 
     public async createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['create']>[0]): Promise<T> {
@@ -56,7 +56,7 @@ export class SysDocument implements ISysDocument {
             }
             return all;
         }, [] as AbstractGeoElement[]);
-        this.getRenderer().delGeoElementsByIds(...geoElements.map((ele) => ele.id));
+        this.getRenderDoc().delGeoElementsByIds(...geoElements.map((ele) => ele.id));
 
         this._elementMgr.delElementsByIds(...ids);
         this._idPool.recycleIds(...ids);
@@ -88,7 +88,7 @@ export class SysDocument implements ISysDocument {
         Ctor: GElementClass<T>,
         params: Omit<Parameters<T['create']>[0], keyof IAbstractGeoElementInit>,
     ): T {
-        const renderer = this.getRenderer();
+        const renderer = this.getRenderDoc();
         return renderer.createGeoElement<T>(Ctor, params);
     }
 }

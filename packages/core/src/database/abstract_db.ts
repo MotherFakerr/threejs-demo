@@ -1,3 +1,4 @@
+import { IAbstractElement } from '../element';
 import { ElementId } from '../id';
 import { IRenderDocument } from '../renderer/i_render_document';
 import { ISysDocument } from '../sys_document/interface';
@@ -26,8 +27,12 @@ export abstract class AbstractDB implements IAbstractDB {
         return this._view;
     }
 
-    public getRenderer(): IRenderDocument {
-        return this._view.getRenderer();
+    public getRenderDoc(): IRenderDocument {
+        return this._view.getRenderDoc();
+    }
+
+    public getElement(): IAbstractElement {
+        return this.getDoc().getElementById(this._id)!;
     }
 
     public dump(): KV {

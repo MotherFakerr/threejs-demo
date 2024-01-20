@@ -13,7 +13,7 @@ export class SysView implements ISysView {
         this._document = new SysDocument(this);
     }
 
-    public getRenderer(): IRenderDocument {
+    public getRenderDoc(): IRenderDocument {
         return this._renderDocument;
     }
 

@@ -8,7 +8,7 @@ export interface IAbstractDB {
     id: ElementId;
     getDoc(): ISysDocument;
     getView(): ISysView;
-    getRenderer(): IRenderDocument;
+    getRenderDoc(): IRenderDocument;
     dump(): KV;
 }
 export interface IAbstractGraphicDB<T extends AbstractGeoElement = AbstractGeoElement> extends IAbstractDB {

@@ -2,7 +2,7 @@ import { IRenderDocument, IThreeRenderOptions } from '../renderer/i_render_docum
 import { ISysDocument } from '../sys_document/interface';
 
 export interface ISysView {
-    getRenderer(): IRenderDocument;
+    getRenderDoc(): IRenderDocument;
     getDocument(): ISysDocument;
     updateView(): void;
 }
