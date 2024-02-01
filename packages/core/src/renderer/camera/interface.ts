@@ -1,6 +1,8 @@
+import { Vector3 } from '@threejs-demo/math';
+
 export interface ICamera<T extends THREE.Camera = THREE.Camera> {
     getInstance(): T;
-    position: THREE.Vector3;
+    position: Vector3;
     lookAt(x: number, y: number, z: number): void;
     resize(width: number, height: number): void;
     updateProjectionMatrix(): void;

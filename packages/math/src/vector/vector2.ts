@@ -13,4 +13,12 @@ export class Vector2 extends THREE.Vector2 {
     public static Y(y?: number): Vector2 {
         return new Vector2(0, y);
     }
+
+    public normalized(): this {
+        return this.clone().normalize();
+    }
+
+    public copy(v: Vector2): this {
+        return this.set(v.x, v.y);
+    }
 }

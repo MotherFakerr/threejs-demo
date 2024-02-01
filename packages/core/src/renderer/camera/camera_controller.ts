@@ -5,6 +5,7 @@ import { Vector2, Vector3 } from '@threejs-demo/math';
 import { AbstractCamera } from './abstract_camera';
 import { OrthographicCamera } from './orthographic_camera';
 import { PerspectiveCamera } from './perspective_camera';
+import { ICamera } from './interface';
 
 // OrbitControls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
@@ -40,11 +41,11 @@ const _ray = new Ray();
 const _plane = new Plane();
 const TILT_LIMIT = Math.cos(70 * MathUtils.DEG2RAD);
 
-class OrbitControls {
+export class CameraController {
     /**
      * The camera being controlled.
      */
-    object: AbstractCamera;
+    object: ICamera;
 
     /**
      * The HTMLElement used to listen for mouse / touch events.
@@ -264,7 +265,7 @@ class OrbitControls {
 
     maxTargetRadius: number;
 
-    _scope: this;
+    _scope = this;
 
     _EPS = 0.000001;
 
@@ -316,7 +317,7 @@ class OrbitControls {
 
     _state = EN_STATE.NONE;
 
-    constructor(object: AbstractCamera, domElement: HTMLElement) {
+    constructor(object: ICamera, domElement: HTMLElement) {
         this.object = object;
         this.domElement = domElement;
         this.domElement.style.touchAction = 'none'; // disable touch scroll
@@ -368,7 +369,7 @@ class OrbitControls {
 
         // Set to false to disable panning
         this.enablePan = true;
-        this.panSpeed = 1.0;
+        this.panSpeed = 100.0;
         this.screenSpacePanning = true; // if false, pan orthogonal to world-space direction camera.up
         this.keyPanSpeed = 7.0; // pixels moved per arrow key push
         this.zoomToCursor = false;
@@ -393,6 +394,15 @@ class OrbitControls {
         this.zoom0 = this.object instanceof OrthographicCamera ? this.object.getInstance().zoom : undefined;
 
         this._resetUpdate();
+    }
+
+    public panMove(dir: Vector2): void {
+        const normDir = dir.normalized();
+        const deltaX = normDir.x * this.panSpeed;
+        const deltaY = normDir.y * this.panSpeed;
+
+        this._pan(deltaX, deltaY);
+        this.update();
     }
 
     public getPolarAngle(): number {
@@ -426,7 +436,7 @@ class OrbitControls {
         this._state = EN_STATE.NONE;
     }
 
-    public update(deltaTime: number | null): boolean {
+    public update(deltaTime: number | null = null): boolean {
         const twoPI = 2 * Math.PI;
         const { position } = this._scope.object;
 
@@ -613,12 +623,21 @@ class OrbitControls {
     }
 
     private _resetUpdate(): void {
-        this._updateParams.offset = new Vector3();
-        this._updateParams.quat = new THREE.Quaternion().setFromUnitVectors(this.object.getInstance().up, new Vector3(0, 1, 0));
-        this._updateParams.quatInverse = this._updateParams.quat.clone().invert();
-        this._updateParams.lastPosition = new Vector3();
-        this._updateParams.lastQuaternion = new THREE.Quaternion();
-        this._updateParams.lastTargetPosition = new Vector3();
+        const offset = new Vector3();
+        const quat = new THREE.Quaternion().setFromUnitVectors(this.object.getInstance().up, new Vector3(0, 1, 0));
+        const quatInverse = new THREE.Quaternion();
+        const lastPosition = new Vector3();
+        const lastQuaternion = new THREE.Quaternion();
+        const lastTargetPosition = new Vector3();
+
+        this._updateParams = {
+            offset,
+            quat,
+            quatInverse,
+            lastPosition,
+            lastQuaternion,
+            lastTargetPosition,
+        };
     }
 
     private _getAutoRotationAngle(deltaTime: number | null): number {
@@ -739,5 +758,3 @@ class OrbitControls {
         return Math.max(this._scope.minDistance, Math.min(this._scope.maxDistance, dist));
     }
 }
-
-export { OrbitControls };
