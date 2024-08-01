@@ -1,7 +1,8 @@
 import { ISysView } from '@threejs-demo/core';
 import { action, makeObservable, observable } from 'mobx';
 import GUI from 'three/examples/jsm/libs/lil-gui.module.min';
-import { AmbientLightElement } from '@threejs-demo/elements';
+import { AmbientLightElement, PointLightElement } from '@threejs-demo/elements';
+import { Vector3 } from '@threejs-demo/math';
 import { registerStore } from '.';
 
 export interface IDebuggerStore {
@@ -29,6 +30,7 @@ export class DebuggerStore implements IDebuggerStore {
         this.gui.domElement = dom;
         this.view = view;
         this.reset();
+        this._playgroundDebug();
     }
 
     reset(): void {
@@ -39,6 +41,14 @@ export class DebuggerStore implements IDebuggerStore {
         const ambientLight = this.view.getDocument().getOrCreateUniqueElement(AmbientLightElement);
         this.gui.add({ ...ambientLight.db }, 'intensity', 0, 2.0).onChange((v) => {
             ambientLight.updateElement({ intensity: v });
+        });
+    }
+
+    private _playgroundDebug(): void {
+        const pointLight = this.view.getDocument().createElement(PointLightElement, {
+            position: new Vector3(10, 10, 10),
+            color: 0xff0000,
+            intensity: 1.0,
         });
     }
 }

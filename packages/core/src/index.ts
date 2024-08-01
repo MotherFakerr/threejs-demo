@@ -6,3 +6,6 @@ export * from './geo_element';
 export * from './id';
 export * from './calculator';
 export * from './database';
+
+// TODO: to delete
+export { AnimationAction, AnimationClip, ColorKeyframeTrack } from 'three';

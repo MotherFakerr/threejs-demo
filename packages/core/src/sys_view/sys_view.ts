@@ -11,8 +11,8 @@ export class SysView implements ISysView {
         this._document = new SysDocument(renderDocument);
     }
 
-    public getRenderer(): IRenderDocument {
-        return this._document.getRenderer();
+    public getRenderDoc(): IRenderDocument {
+        return this._document.getRenderDoc();
     }
 
     public getDocument(): ISysDocument {
@@ -20,6 +20,6 @@ export class SysView implements ISysView {
     }
 
     public updateView(): void {
-        this.getRenderer().updateView();
+        this.getRenderDoc().updateView();
     }
 }

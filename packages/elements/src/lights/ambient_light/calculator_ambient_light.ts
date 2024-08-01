@@ -5,7 +5,7 @@ import { AmbientLightDB } from './ambient_light_db';
 export class CalculatorAmbientLight extends AbstractCalculator<AmbientLightDB> {
     public async execute(db: AmbientLightDB): Promise<AbstractGeoElement[]> {
         const { color, intensity } = db;
-        const renderer = db.getDoc().getRenderer();
+        const renderer = db.getDoc().getRenderDoc();
         const geo = renderer.createGeoElement(GAmbientLight, { color, intensity });
         db.setGeoElements([geo]);
         return [geo];

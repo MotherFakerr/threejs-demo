@@ -6,7 +6,7 @@ import { ISysDocument } from '../sys_document/interface';
 export interface IAbstractDB {
     id: ElementId;
     getDoc(): ISysDocument;
-    getRenderer(): IRenderDocument;
+    getRenderDoc(): IRenderDocument;
     dump(): KV;
 }
 

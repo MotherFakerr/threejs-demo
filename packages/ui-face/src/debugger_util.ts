@@ -10,7 +10,7 @@ export function setupDebuggerUtil(): void {
 
     Reflect.defineProperty(window, 'allGeoElements', {
         get: () => {
-            return (store.appStore as IAppStore).getMainView().getRenderer().getAllElements();
+            return (store.appStore as IAppStore).getMainView().getRenderDoc().getAllGeoElements();
         },
     });
 }

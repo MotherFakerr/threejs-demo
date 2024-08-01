@@ -48,8 +48,8 @@ export abstract class AbstractElement<D extends IAbstractDB, C extends IElementC
         return this._doc;
     }
 
-    public getRenderer(): IRenderDocument {
-        return this._doc.getRenderer();
+    public getRenderDoc(): IRenderDocument {
+        return this._doc.getRenderDoc();
     }
 
     protected async _safeInitDB(args: C): Promise<void> {

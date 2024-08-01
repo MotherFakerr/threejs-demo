@@ -1,11 +1,11 @@
 import { AbstractGraphicElement, AbstractUniqueElement, AbstractUniqueGraphicElement } from '../element';
 import { ElementClass, IAbstractElement, UniqueElementClass, UniqueGraphicElementClass } from '../element/interface';
+import { ElementMgr } from '../element_mgr/element_mgr';
 import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abstract_geo_element';
 import { GElementClass } from '../geo_element/interface';
 import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
 import { IRenderDocument } from '../renderer';
-import { ElementMgr } from './element_mgr';
 import { ISysDocument } from './interface';
 
 export class SysDocument implements ISysDocument {
@@ -21,7 +21,7 @@ export class SysDocument implements ISysDocument {
         this._elementMgr = new ElementMgr();
     }
 
-    public getRenderer(): IRenderDocument {
+    public getRenderDoc(): IRenderDocument {
         return this._renderDocument;
     }
 
@@ -51,7 +51,7 @@ export class SysDocument implements ISysDocument {
             }
             return all;
         }, [] as AbstractGeoElement[]);
-        this.getRenderer().delGeoElementsByIds(...geoElements.map((ele) => ele.id));
+        this.getRenderDoc().delGeoElementsByIds(...geoElements.map((ele) => ele.id));
 
         this._elementMgr.delElementsByIds(...ids);
         this._idPool.recycleIds(...ids);
@@ -83,7 +83,7 @@ export class SysDocument implements ISysDocument {
         Ctor: GElementClass<T>,
         params: Omit<Parameters<T['create']>[0], keyof IAbstractGeoElementInit>,
     ): T {
-        const renderer = this.getRenderer();
+        const renderer = this.getRenderDoc();
         return renderer.createGeoElement<T>(Ctor, params);
     }
 }

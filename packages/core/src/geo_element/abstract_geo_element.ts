@@ -1,12 +1,13 @@
 import { ElementId } from '../id/element_id';
 import { IRenderDocument } from '../renderer';
 import { ElementIdPool } from '../id/id_pool';
+import { IAbstractGeoElement } from './interface';
 
 export interface IAbstractGeoElementInit {
     isDebug?: boolean;
 }
 
-export abstract class AbstractGeoElement {
+export abstract class AbstractGeoElement implements IAbstractGeoElement {
     protected _id: ElementId;
 
     protected _renderer: IRenderDocument;
@@ -31,7 +32,7 @@ export abstract class AbstractGeoElement {
         this.notify();
     }
 
-    public getRenderer(): IRenderDocument {
+    public getRenderDoc(): IRenderDocument {
         return this._renderer;
     }
 

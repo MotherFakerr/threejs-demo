@@ -5,7 +5,7 @@ import { ElementId } from '../id/element_id';
 import { IRenderDocument } from '../renderer/i_render_document';
 
 export interface ISysDocument {
-    getRenderer(): IRenderDocument;
+    getRenderDoc(): IRenderDocument;
     createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['initElement']>[0]): Promise<T>;
     getElementById(eleId: number | ElementId): IAbstractElement | undefined;
     getElementsByIds(...eleIds: (number | ElementId)[]): IAbstractElement[];

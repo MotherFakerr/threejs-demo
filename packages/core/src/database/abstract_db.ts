@@ -21,8 +21,8 @@ export abstract class AbstractDB implements IAbstractDB {
         return this._doc;
     }
 
-    public getRenderer(): IRenderDocument {
-        return this._doc.getRenderer();
+    public getRenderDoc(): IRenderDocument {
+        return this._doc.getRenderDoc();
     }
 
     public dump(): KV {

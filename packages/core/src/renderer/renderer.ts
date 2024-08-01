@@ -8,6 +8,9 @@ import { IThreeRenderOptions } from './i_render_document';
 import { IThreeRenderer } from './i_renderer';
 import { PerspectiveCamera } from './camera/perspective_camera';
 import { OrthographicCamera } from './camera/orthographic_camera';
+import { AnimationMixerMgr } from '../element_mgr';
+import { CameraController } from './camera/camera_controller';
+import { Vector2, Vector3 } from '@threejs-demo/math';
 
 export class ThreeRenderer implements IThreeRenderer {
     private _scene: THREE.Scene;
@@ -18,11 +21,11 @@ export class ThreeRenderer implements IThreeRenderer {
 
     private _stats: Stats | undefined;
 
-    private _animationMixer: THREE.AnimationMixer;
-
     private _clock: THREE.Clock;
 
-    constructor(private _container: HTMLElement, private _options: IThreeRenderOptions) {
+    private _animationMixer: THREE.AnimationMixer | undefined;
+
+    constructor(private _container: HTMLElement, private _animationMixerMgr: AnimationMixerMgr, private _options: IThreeRenderOptions) {
         this._scene = new THREE.Scene();
         this._clock = new THREE.Clock();
         this._initCamera();
@@ -64,9 +67,17 @@ export class ThreeRenderer implements IThreeRenderer {
             this._stats.update();
         }
 
+        const delta = this._clock.getDelta();
+
+        const allAnimationMixers = this._animationMixerMgr.getAllAnimationMixers();
+        // for (const mixer of allAnimationMixers) {
+        //     mixer.instance.update(delta);
+        // }
+
         if (this._animationMixer) {
-            this._animationMixer.update(this._clock.getDelta());
+            this._animationMixer.update(delta);
         }
+        console.log(this._camera);
         this.render();
         requestAnimationFrame(this._requestAnimationFrame.bind(this));
     }
@@ -99,7 +110,7 @@ export class ThreeRenderer implements IThreeRenderer {
             this._camera = new OrthographicCamera(options);
         }
 
-        this._camera.position.set(100, 100, 100);
+        this._camera.position = new Vector3(100, 100, 100);
         this._camera.lookAt(0, 0, 0);
     }
 
@@ -131,8 +142,13 @@ export class ThreeRenderer implements IThreeRenderer {
             this._scene.add(axesHelper);
 
             // TODO: 后期自己写
-            const controls = new OrbitControls(this._camera.getInstance(), this._container);
-            console.log(controls);
+            // const controls = new OrbitControls(this._camera.getInstance(), this._container);
+            // console.log(controls);
+
+            const cameraController = new CameraController(this._camera, this._container);
+            document.addEventListener('wheel', (event) => {
+                cameraController.panMove(Vector2.X(1));
+            });
         }
     }
 
@@ -180,11 +196,12 @@ export class ThreeRenderer implements IThreeRenderer {
         this._scene.add(floor);
 
         const loader = new GLTFLoader();
-        loader.load('model/keli.gltf', (mmd) => {
+        loader.load('model/可莉.glb', (mmd) => {
             // called when the resource is loaded
             const model = mmd.scene;
+
             this._animationMixer = new THREE.AnimationMixer(model);
-            const clip = this._animationMixer.clipAction(mmd.animations[0]);
+            const clip = this._animationMixer.clipAction(mmd.animations[2]);
             this._scene.add(model);
 
             clip.play();

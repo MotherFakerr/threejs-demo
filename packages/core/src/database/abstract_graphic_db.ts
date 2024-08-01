@@ -1,3 +1,4 @@
+import { IAnimationMixer } from '../animation/interface';
 import { AbstractGeoElement } from '../geo_element';
 import { AbstractDB } from './abstract_db';
 import { IAbstractGraphicDB } from './interface';
@@ -7,6 +8,8 @@ export abstract class AbstractGraphicDB<T extends AbstractGeoElement = AbstractG
     implements IAbstractGraphicDB<T>
 {
     protected _geoElements: T[];
+
+    protected _animationMixers: IAnimationMixer[];
 
     public get geoElements(): T[] {
         return this._geoElements;
@@ -29,9 +32,14 @@ export abstract class AbstractGraphicDB<T extends AbstractGeoElement = AbstractG
             });
 
             // 删除不复用element
-            this.getRenderer().delGeoElementsByIds(...delIDs);
+            this.getRenderDoc().delGeoElementsByIds(...delIDs);
         }
 
         this._geoElements = eles;
+    }
+
+    public setAnimationMixers(animationMixers: IAnimationMixer[]): void {
+        this.getRenderDoc().delGeoElementsByIds(...this._animationMixers.map((mixer) => mixer.id.toNum()));
+        this._animationMixers = animationMixers;
     }
 }

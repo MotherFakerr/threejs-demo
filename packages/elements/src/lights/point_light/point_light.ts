@@ -1,8 +1,9 @@
 import { AbstractGraphicElement, DBManager } from '@threejs-demo/core';
 import { PointLightDB } from './point_light_db';
+import { Vector3 } from '@threejs-demo/math';
 
 export interface IPointLightParams {
-    position: THREE.Vector3;
+    position: Vector3;
     color?: number;
     intensity?: number;
     distance?: number;
