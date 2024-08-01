@@ -4,34 +4,32 @@ import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
 import { IRenderDocument } from '../renderer';
 import { ISysDocument } from '../sys_document/interface';
-import { ISysView } from '../sys_view';
 import { ElementClass, IAbstractElement, IElementCreateArgs, IElementUpdateArgs } from './interface';
 
 export abstract class AbstractElement<D extends IAbstractDB, C extends IElementCreateArgs, U extends IElementUpdateArgs>
     implements IAbstractElement<D>
 {
-    protected _view: ISysView;
+    protected _doc: ISysDocument;
 
     protected _db: D;
 
     private _dbEditable = false;
 
-    constructor(view: ISysView, idPool: ElementIdPool) {
-        this._view = view;
+    constructor(doc: ISysDocument, idPool: ElementIdPool) {
+        this._doc = doc;
         // eslint-disable-next-line no-proto
         const Ctor = (this as ANY).__proto__.constructor as ElementClass;
         const DbCtor = DBManager.getDBCtor(Ctor);
-        this._db = new Proxy(new DbCtor(view, new ElementId(idPool)) as D, {
+        this._db = new Proxy(new DbCtor(doc, new ElementId(idPool)) as D, {
             set: (target: D, p: string, value) => {
                 if (p === '_id' || p === '_view') {
                     throw new Error("id & view can't be edited");
                 }
 
                 if (!this._dbEditable) {
-                    throw new Error("db should be edited through element's update method!!!");
+                    throw new Error("db should be edited through element's updateElement method!!!");
                 }
 
-                // eslint-disable-next-line no-param-reassign
                 target[p] = value;
                 return true;
             },
@@ -47,32 +45,30 @@ export abstract class AbstractElement<D extends IAbstractDB, C extends IElementC
     }
 
     public getDoc(): ISysDocument {
-        return this._view.getDocument();
-    }
-
-    public getView(): ISysView {
-        return this._view;
+        return this._doc;
     }
 
     public getRenderer(): IRenderDocument {
-        return this._view.getRenderer();
+        return this._doc.getRenderer();
     }
 
-    public async create(args: C): Promise<this> {
+    protected async _safeInitDB(args: C): Promise<void> {
         this._dbEditable = true;
-        await this._createDB(args);
+        await this._initDB(args);
         this._dbEditable = false;
-        return this;
     }
 
-    public async update(args: U): Promise<this> {
+    protected async _safeUpdateDB(args: U): Promise<void> {
         this._dbEditable = true;
         await this._updateDB(args);
         this._dbEditable = false;
-        return this;
     }
 
-    protected abstract _createDB(args: C): Promise<void>;
+    public abstract initElement(args: C, disableRender?: boolean): Promise<this>;
+
+    public abstract updateElement(args: U, disableRender?: boolean): Promise<this>;
+
+    protected abstract _initDB(args: C): Promise<void>;
 
     protected abstract _updateDB(args: U): Promise<void>;
 }

@@ -1,16 +1,15 @@
 import { ElementId } from '../id';
 import { IRenderDocument } from '../renderer/i_render_document';
 import { ISysDocument } from '../sys_document/interface';
-import { ISysView } from '../sys_view/interface';
 import { IAbstractDB } from './interface';
 
 export abstract class AbstractDB implements IAbstractDB {
-    protected _view: ISysView;
+    protected _doc: ISysDocument;
 
     protected _id: ElementId;
 
-    constructor(view: ISysView, id: ElementId) {
-        this._view = view;
+    constructor(doc: ISysDocument, id: ElementId) {
+        this._doc = doc;
         this._id = id;
     }
 
@@ -19,15 +18,11 @@ export abstract class AbstractDB implements IAbstractDB {
     }
 
     public getDoc(): ISysDocument {
-        return this._view.getDocument();
-    }
-
-    public getView(): ISysView {
-        return this._view;
+        return this._doc;
     }
 
     public getRenderer(): IRenderDocument {
-        return this._view.getRenderer();
+        return this._doc.getRenderer();
     }
 
     public dump(): KV {

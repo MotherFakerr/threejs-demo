@@ -4,17 +4,15 @@ import { ISysDocument, SysDocument } from '../sys_document';
 import { ISysView, ISysViewOptions } from './interface';
 
 export class SysView implements ISysView {
-    private _renderDocument: IRenderDocument;
-
     private _document: ISysDocument;
 
     constructor(private _container: HTMLElement, options: ISysViewOptions = {}) {
-        this._renderDocument = new RenderDocument(this._container, options);
-        this._document = new SysDocument(this);
+        const renderDocument = new RenderDocument(this._container, options);
+        this._document = new SysDocument(renderDocument);
     }
 
     public getRenderer(): IRenderDocument {
-        return this._renderDocument;
+        return this._document.getRenderer();
     }
 
     public getDocument(): ISysDocument {
@@ -22,6 +20,6 @@ export class SysView implements ISysView {
     }
 
     public updateView(): void {
-        this._renderDocument.updateView();
+        this.getRenderer().updateView();
     }
 }

@@ -7,7 +7,7 @@ export interface IAmbientLightParams {
 }
 @DBManager.registerElementDB(AmbientLightDB)
 export class AmbientLightElement extends AbstractUniqueGraphicElement<AmbientLightDB, IAmbientLightParams, IAmbientLightParams> {
-    protected async _createDB(args: IAmbientLightParams): Promise<void> {
+    protected async _initDB(args: IAmbientLightParams): Promise<void> {
         await this._updateDB(args);
     }
 

@@ -5,7 +5,6 @@ import { GElementClass } from '../geo_element/interface';
 import { ElementId } from '../id/element_id';
 import { ElementIdPool } from '../id/id_pool';
 import { IRenderDocument } from '../renderer';
-import { ISysView } from '../sys_view';
 import { ElementMgr } from './element_mgr';
 import { ISysDocument } from './interface';
 
@@ -14,24 +13,20 @@ export class SysDocument implements ISysDocument {
 
     private readonly _idPool: ElementIdPool;
 
-    private _view: ISysView;
+    private _renderDocument: IRenderDocument;
 
-    constructor(view: ISysView) {
-        this._view = view;
+    constructor(renderDocument: IRenderDocument) {
+        this._renderDocument = renderDocument;
         this._idPool = new ElementIdPool();
         this._elementMgr = new ElementMgr();
     }
 
-    public getSysView(): ISysView {
-        return this._view;
-    }
-
     public getRenderer(): IRenderDocument {
-        return this._view.getRenderer();
+        return this._renderDocument;
     }
 
-    public async createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['create']>[0]): Promise<T> {
-        const element = await new Ctor(this._view, this._idPool).create({ ...params });
+    public async createElement<T extends IAbstractElement>(Ctor: ElementClass<T>, params: Parameters<T['initElement']>[0]): Promise<T> {
+        const element = await new Ctor(this, this._idPool).initElement({ ...params });
         this._elementMgr.addElements(element);
         return element;
     }
@@ -69,7 +64,7 @@ export class SysDocument implements ISysDocument {
     public getOrCreateUniqueElement<T extends AbstractUniqueElement>(Ctor: UniqueElementClass<T>): T {
         let element = this._elementMgr.getUniqueElementByCtor<T>(Ctor);
         if (!element) {
-            element = new Ctor(this._view, this._idPool);
+            element = new Ctor(this, this._idPool);
             this._elementMgr.addUniqueElementByCtor(Ctor, element);
         }
         return element;
@@ -78,7 +73,7 @@ export class SysDocument implements ISysDocument {
     public getOrCreateUniqueGraphicElement<T extends AbstractUniqueGraphicElement>(Ctor: UniqueGraphicElementClass<T>): T {
         let element = this._elementMgr.getUniqueElementByCtor<T>(Ctor);
         if (!element) {
-            element = new Ctor(this._view, this._idPool);
+            element = new Ctor(this, this._idPool);
             this._elementMgr.addUniqueElementByCtor(Ctor, element);
         }
         return element;

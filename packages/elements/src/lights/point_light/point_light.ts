@@ -1,4 +1,4 @@
-import { AbstractUniqueGraphicElement, DBManager } from '@threejs-demo/core';
+import { AbstractGraphicElement, DBManager } from '@threejs-demo/core';
 import { PointLightDB } from './point_light_db';
 
 export interface IPointLightParams {
@@ -10,8 +10,8 @@ export interface IPointLightParams {
 }
 
 @DBManager.registerElementDB(PointLightDB)
-export class PointLightElement extends AbstractUniqueGraphicElement<PointLightDB, IPointLightParams> {
-    protected async _createDB(args: IPointLightParams): Promise<void> {
+export class PointLightElement extends AbstractGraphicElement<PointLightDB, IPointLightParams> {
+    protected async _initDB(args: IPointLightParams): Promise<void> {
         await this._updateDB(args);
     }
 

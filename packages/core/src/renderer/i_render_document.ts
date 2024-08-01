@@ -1,4 +1,4 @@
-import { EN_CAMERA_TYPE, ICamera, IOrthographicCameraOptions, IPerspectiveCameraOptions } from './camera';
+import { EN_CAMERA_TYPE, IOrthographicCameraOptions, IPerspectiveCameraOptions } from './camera';
 import { ElementId } from '../id/element_id';
 import { AbstractGeoElement, IAbstractGeoElementInit } from '../geo_element/abstract_geo_element';
 import { GElementClass } from '../geo_element/interface';

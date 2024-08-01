@@ -190,25 +190,25 @@ export class ThreeRenderer implements IThreeRenderer {
             clip.play();
         });
 
-        const loader1 = new FBXLoader();
-        loader1.load('大社.fbx', (mmd) => {
-            mmd.traverse((child) => {
-                if ((child as THREE.Mesh).isMesh) {
-                    child.material = new THREE.MeshLambertMaterial({
-                        color: 0x004444,
-                        transparent: true,
-                        opacity: 0.5,
-                    });
-                    // 模型边线设置
-                    const edges = new THREE.EdgesGeometry(child.geometry);
-                    const edgesMaterial = new THREE.LineBasicMaterial({
-                        color: 0x00ffff,
-                    });
-                    const line = new THREE.LineSegments(edges, edgesMaterial);
-                    child.add(line);
-                }
-            });
-            this._scene.add(mmd);
-        });
+        // const loader1 = new FBXLoader();
+        // loader1.load('大社.fbx', (mmd) => {
+        //     mmd.traverse((child) => {
+        //         if ((child as THREE.Mesh).isMesh) {
+        //             child.material = new THREE.MeshLambertMaterial({
+        //                 color: 0x004444,
+        //                 transparent: true,
+        //                 opacity: 0.5,
+        //             });
+        //             // 模型边线设置
+        //             const edges = new THREE.EdgesGeometry(child.geometry);
+        //             const edgesMaterial = new THREE.LineBasicMaterial({
+        //                 color: 0x00ffff,
+        //             });
+        //             const line = new THREE.LineSegments(edges, edgesMaterial);
+        //             child.add(line);
+        //         }
+        //     });
+        //     this._scene.add(mmd);
+        // });
     }
 }
