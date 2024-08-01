@@ -70,14 +70,14 @@ export class ThreeRenderer implements IThreeRenderer {
         const delta = this._clock.getDelta();
 
         const allAnimationMixers = this._animationMixerMgr.getAllAnimationMixers();
-        // for (const mixer of allAnimationMixers) {
-        //     mixer.instance.update(delta);
-        // }
+        for (const mixer of allAnimationMixers) {
+            mixer.instance.update(delta);
+        }
 
         if (this._animationMixer) {
             this._animationMixer.update(delta);
         }
-        console.log(this._camera);
+        // console.log(this._camera);
         this.render();
         requestAnimationFrame(this._requestAnimationFrame.bind(this));
     }
@@ -196,12 +196,12 @@ export class ThreeRenderer implements IThreeRenderer {
         this._scene.add(floor);
 
         const loader = new GLTFLoader();
-        loader.load('model/可莉.glb', (mmd) => {
+        loader.load('model/keli.gltf', (mmd) => {
             // called when the resource is loaded
             const model = mmd.scene;
 
             this._animationMixer = new THREE.AnimationMixer(model);
-            const clip = this._animationMixer.clipAction(mmd.animations[2]);
+            const clip = this._animationMixer.clipAction(mmd.animations[0]);
             this._scene.add(model);
 
             clip.play();
